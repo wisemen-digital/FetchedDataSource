@@ -1,0 +1,38 @@
+PODS:
+  - CompoundFetchedResultsController (1.0.0)
+  - FetchedDataSource (1.0.0):
+    - Reusable
+  - MagicalRecord (2.3.2):
+    - MagicalRecord/Core (= 2.3.2)
+  - MagicalRecord/Core (2.3.2)
+  - Reusable (3.0.1):
+    - Reusable/Storyboard (= 3.0.1)
+    - Reusable/View (= 3.0.1)
+  - Reusable/Storyboard (3.0.1)
+  - Reusable/View (3.0.1)
+
+DEPENDENCIES:
+  - CompoundFetchedResultsController (from `https://github.com/djbe/CompoundFetchedResultsController.git`)
+  - FetchedDataSource (from `../`)
+  - MagicalRecord
+
+EXTERNAL SOURCES:
+  CompoundFetchedResultsController:
+    :git: https://github.com/djbe/CompoundFetchedResultsController.git
+  FetchedDataSource:
+    :path: "../"
+
+CHECKOUT OPTIONS:
+  CompoundFetchedResultsController:
+    :commit: f5386d7d993f814690cc8183e9d9506259603ce1
+    :git: https://github.com/djbe/CompoundFetchedResultsController.git
+
+SPEC CHECKSUMS:
+  CompoundFetchedResultsController: c256f4f6b63f561265efc29c99b9395058bbd1de
+  FetchedDataSource: f37366b2c2df8ca7e50de621860680581119686d
+  MagicalRecord: 53bed74b4323b930992a725be713e53b37d19755
+  Reusable: 5362d10271ca8316b104698a21e90498f47e8339
+
+PODFILE CHECKSUM: 0f8e173a5a67388bda21907cf8031dd9442468f8
+
+COCOAPODS: 1.2.0.beta.1
