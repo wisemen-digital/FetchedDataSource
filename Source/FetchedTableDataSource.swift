@@ -63,10 +63,8 @@ class FetchedTableDataSource<FetchResult: NSFetchRequestResult, DelegateType: Fe
 				changes.addObjectChange(type: type, path: indexPath)
 			}
 		case .move:
-
 			if let indexPath = indexPath, let newIndexPath = newIndexPath {
-				changes.addObjectChange(type: .delete, path: indexPath)
-				changes.addObjectChange(type: .insert, path: newIndexPath)
+				changes.addObjectMove(from: indexPath, to: newIndexPath)
 			}
 			break
 		}
@@ -83,6 +81,9 @@ class FetchedTableDataSource<FetchResult: NSFetchRequestResult, DelegateType: Fe
 		view?.deleteRows(at: Array(changes.deletedObjects), with: animations?[.delete] ?? .automatic)
 		view?.insertRows(at: Array(changes.insertedObjects), with: animations?[.insert] ?? .automatic)
 		view?.reloadRows(at: Array(changes.updatedObjects), with: animations?[.update] ?? .automatic)
+		for move in changes.movedObjects {
+			view?.moveRow(at: move.from, to: move.to)
+		}
 		view?.endUpdates()
 
 		changes = FetchedChanges()
