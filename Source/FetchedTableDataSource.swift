@@ -19,6 +19,11 @@ class FetchedTableDataSource<FetchResult: NSFetchRequestResult, DelegateType: Fe
 		}
 	}
 
+	public override func data(for cell: DelegateType.CellType) -> FetchResult? {
+		guard let path = view?.indexPath(for: cell) else { return nil }
+		return controller.object(at: path)
+	}
+
 	// MARK: - UITableViewDataSource
 
 	func numberOfSections(in tableView: UITableView) -> Int {

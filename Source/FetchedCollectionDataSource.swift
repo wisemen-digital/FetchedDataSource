@@ -21,6 +21,11 @@ class FetchedCollectionDataSource<FetchResult: NSFetchRequestResult, DelegateTyp
 		}
 	}
 
+	public override func data(for cell: DelegateType.CellType) -> FetchResult? {
+		guard let path = view?.indexPath(for: cell) else { return nil }
+		return controller.object(at: path)
+	}
+
 	// MARK: - UICollectionViewDataSource
 
 	func numberOfSections(in collectionView: UICollectionView) -> Int {

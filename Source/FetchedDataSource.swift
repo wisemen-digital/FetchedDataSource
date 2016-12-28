@@ -33,6 +33,16 @@ public class FetchedDataSource<FetchResult: NSFetchRequestResult, DelegateType: 
 		super.init()
 	}
 
+	// MARK: - Helper methods
+
+	public func data(for indexPath: IndexPath) -> FetchResult {
+		return controller.object(at: indexPath)
+	}
+
+	public func data(for cell: DelegateType.CellType) -> FetchResult? {
+		return nil
+	}
+
 	// MARK: - Empty NSFetchedResultsControllerDelegate methods
 
 	public func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
@@ -45,13 +55,5 @@ public class FetchedDataSource<FetchResult: NSFetchRequestResult, DelegateType: 
 	}
 
 	public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-	}
-}
-
-// MARK: - Helper methods
-
-extension FetchedDataSource {
-	public func data(for indexPath: IndexPath) -> FetchResult {
-		return controller.object(at: indexPath)
 	}
 }
