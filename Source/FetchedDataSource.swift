@@ -9,14 +9,6 @@
 import CoreData
 import UIKit
 
-public protocol FetchedDataSourceDelegate: class {
-	associatedtype DataType: NSFetchRequestResult
-	associatedtype ViewType: UIView
-	associatedtype CellType: UIView
-
-	func cell(for indexPath: IndexPath, data: DataType, view: ViewType) -> CellType
-}
-
 public class FetchedDataSource<FetchResult: NSFetchRequestResult, DelegateType: FetchedDataSourceDelegate>: NSObject, NSFetchedResultsControllerDelegate {
 
 	let controller: NSFetchedResultsController<FetchResult>
