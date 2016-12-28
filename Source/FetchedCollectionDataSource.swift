@@ -45,6 +45,12 @@ class FetchedCollectionDataSource<FetchResult: NSFetchRequestResult, DelegateTyp
 		return cell
 	}
 
+	func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+		guard let delegate = delegate else { fatalError("Delegate cannot be nil") }
+
+		return delegate.view(of: kind, at: indexPath, view: collectionView) ?? UICollectionReusableView()
+	}
+
 	// MARK: - NSFetchedResultsControllerDelegate
 
 	public override func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {

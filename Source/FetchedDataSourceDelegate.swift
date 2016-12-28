@@ -15,4 +15,14 @@ public protocol FetchedDataSourceDelegate: class {
 	associatedtype CellType: UIView
 
 	func cell(for indexPath: IndexPath, data: DataType, view: ViewType) -> CellType
+
+	// collection delegates
+
+	func view(of kind: String, at indexPath: IndexPath, view: ViewType) -> UICollectionReusableView?
+}
+
+public extension FetchedDataSourceDelegate {
+	func view(of kind: String, at indexPath: IndexPath, view: ViewType) -> UICollectionReusableView? {
+		return nil
+	}
 }
