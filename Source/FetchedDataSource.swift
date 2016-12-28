@@ -47,3 +47,11 @@ public class FetchedDataSource<FetchResult: NSFetchRequestResult, DelegateType: 
 	public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
 	}
 }
+
+// MARK: - Helper methods
+
+extension FetchedDataSource {
+	public func data(for indexPath: IndexPath) -> FetchResult {
+		return controller.object(at: indexPath)
+	}
+}
