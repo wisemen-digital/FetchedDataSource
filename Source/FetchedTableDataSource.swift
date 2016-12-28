@@ -30,10 +30,12 @@ class FetchedTableDataSource<FetchResult: NSFetchRequestResult, DelegateType: Fe
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		guard let delegate = delegate else { fatalError() }
-		let data = controller.object(at: indexPath)
+		guard let delegate = delegate else { fatalError("Delegate cannot be nil") }
 
-		return delegate.cell(for: indexPath, data: data, view: tableView)
+		let data = controller.object(at: indexPath)
+		let cell = delegate.cell(for: indexPath, data: data, view: tableView)
+
+		return cell
 	}
 
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
