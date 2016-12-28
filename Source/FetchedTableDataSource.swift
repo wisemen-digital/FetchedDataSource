@@ -89,12 +89,12 @@ class FetchedTableDataSource<FetchResult: NSFetchRequestResult, DelegateType: Fe
 	}
 
 	public override func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-		view?.deleteSections(deletedSections, with: .automatic)
-		view?.insertSections(insertedSections, with: .automatic)
-		view?.reloadSections(reloadedSections, with: .automatic)
-		view?.deleteRows(at: deletedRows, with: .automatic)
-		view?.insertRows(at: insertedRows, with: .automatic)
-		view?.reloadRows(at: reloadedRows, with: .automatic)
+		view?.deleteSections(deletedSections, with: animations?[.delete] ?? .automatic)
+		view?.insertSections(insertedSections, with: animations?[.insert] ?? .automatic)
+		view?.reloadSections(reloadedSections, with: animations?[.update] ?? .automatic)
+		view?.deleteRows(at: deletedRows, with: animations?[.delete] ?? .automatic)
+		view?.insertRows(at: insertedRows, with: animations?[.insert] ?? .automatic)
+		view?.reloadRows(at: reloadedRows, with: animations?[.update] ?? .automatic)
 		view?.endUpdates()
 
 		deletedSections = IndexSet()

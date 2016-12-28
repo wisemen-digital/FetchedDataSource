@@ -18,13 +18,17 @@ public protocol FetchedDataSourceDelegate: class {
 }
 
 public class FetchedDataSource<FetchResult: NSFetchRequestResult, DelegateType: FetchedDataSourceDelegate>: NSObject, NSFetchedResultsControllerDelegate {
-	typealias FetchedResultsController = NSFetchedResultsController<FetchResult>
-	
-	let controller: FetchedResultsController
+
+	let controller: NSFetchedResultsController<FetchResult>
 	weak var delegate: DelegateType?
 	weak var view: DelegateType.ViewType?
 
-	internal init(view: DelegateType.ViewType, controller: FetchedResultsController, delegate: DelegateType) {
+	/**
+	Dictionary to configurate the different animations to be applied by each change type.
+	*/
+	public var animations: [NSFetchedResultsChangeType: UITableViewRowAnimation]?
+
+	internal init(view: DelegateType.ViewType, controller: NSFetchedResultsController<FetchResult>, delegate: DelegateType) {
 		self.controller = controller
 		self.view = view
 		self.delegate = delegate
