@@ -11,13 +11,6 @@ import UIKit
 
 class FetchedTableDataSource<FetchResult: NSFetchRequestResult, DelegateType: FetchedDataSourceDelegate where DelegateType.DataType == FetchResult, DelegateType.ViewType == UITableView, DelegateType.CellType == UITableViewCell> : FetchedDataSource<FetchResult, DelegateType>, UITableViewDataSource {
 
-	private var deletedSections = IndexSet()
-	private var insertedSections = IndexSet()
-	private var reloadedSections = IndexSet()
-	private var deletedRows = [IndexPath]()
-	private var insertedRows = [IndexPath]()
-	private var reloadedRows = [IndexPath]()
-
 	override init(view: DelegateType.ViewType, controller: NSFetchedResultsController<FetchResult>, delegate: DelegateType) {
 		super.init(view: view, controller: controller, delegate: delegate)
 
@@ -56,52 +49,42 @@ class FetchedTableDataSource<FetchResult: NSFetchRequestResult, DelegateType: Fe
 	public override func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
 		switch type {
 		case .insert:
-			if !insertedSections.contains(newIndexPath!.section) && !reloadedSections.contains(newIndexPath!.section) {
-				insertedRows.append(newIndexPath!)
+			if let newIndexPath = newIndexPath {
+				changes.addObjectChange(type: type, path: newIndexPath)
 			}
 		case .delete:
-			if !deletedSections.contains(indexPath!.section) && !reloadedSections.contains(indexPath!.section) {
-				deletedRows.append(indexPath!)
+			if let indexPath = indexPath {
+				changes.addObjectChange(type: type, path: indexPath)
 			}
 		case .update:
-			reloadedRows.append(indexPath!)
+			// avoid crash when updating non-visible rows:
+			// http://stackoverflow.com/questions/11432556/nsrangeexception-exception-in-nsfetchedresultschangeupdate-event-of-nsfetchedres
+			if let indexPath = indexPath, let _ = view?.indexPathsForVisibleRows?.index(of: indexPath) {
+				changes.addObjectChange(type: type, path: indexPath)
+			}
 		case .move:
-			if !deletedSections.contains(indexPath!.section) && !reloadedSections.contains(indexPath!.section) {
-				deletedRows.append(indexPath!)
-			}
-			if !insertedSections.contains(newIndexPath!.section) && !reloadedSections.contains(newIndexPath!.section) {
-				insertedRows.append(newIndexPath!)
-			}
-		}
-	}
 
-	public override func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
-		switch type {
-		case .insert:
-			insertedSections.insert(sectionIndex)
-		case .delete:
-			deletedSections.insert(sectionIndex)
-		case .update:
-			reloadedSections.insert(sectionIndex)
-		default:
+			if let indexPath = indexPath, let newIndexPath = newIndexPath {
+				changes.addObjectChange(type: .delete, path: indexPath)
+				changes.addObjectChange(type: .insert, path: newIndexPath)
+			}
 			break
 		}
 	}
 
+	public override func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+		changes.addSectionChange(type: type, index: sectionIndex)
+	}
+
 	public override func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-		view?.deleteSections(deletedSections, with: animations?[.delete] ?? .automatic)
-		view?.insertSections(insertedSections, with: animations?[.insert] ?? .automatic)
-		view?.reloadSections(reloadedSections, with: animations?[.update] ?? .automatic)
-		view?.deleteRows(at: deletedRows, with: animations?[.delete] ?? .automatic)
-		view?.insertRows(at: insertedRows, with: animations?[.insert] ?? .automatic)
-		view?.reloadRows(at: reloadedRows, with: animations?[.update] ?? .automatic)
+		view?.deleteSections(changes.deletedSections, with: animations?[.delete] ?? .automatic)
+		view?.insertSections(changes.insertedSections, with: animations?[.insert] ?? .automatic)
+		view?.reloadSections(changes.updatedSections, with: animations?[.update] ?? .automatic)
+		view?.deleteRows(at: Array(changes.deletedObjects), with: animations?[.delete] ?? .automatic)
+		view?.insertRows(at: Array(changes.insertedObjects), with: animations?[.insert] ?? .automatic)
+		view?.reloadRows(at: Array(changes.updatedObjects), with: animations?[.update] ?? .automatic)
 		view?.endUpdates()
 
-		deletedSections = IndexSet()
-		insertedSections = IndexSet()
-		reloadedSections = IndexSet()
-		deletedRows = [IndexPath]()
-		insertedRows = [IndexPath]()
-		reloadedRows = [IndexPath]()
+		changes = FetchedChanges()
 	}
 }

@@ -14,6 +14,7 @@ public class FetchedDataSource<FetchResult: NSFetchRequestResult, DelegateType: 
 	let controller: NSFetchedResultsController<FetchResult>
 	weak var delegate: DelegateType?
 	weak var view: DelegateType.ViewType?
+	lazy var changes = FetchedChanges()
 
 	/**
 	Dictionary to configurate the different animations to be applied by each change type.
