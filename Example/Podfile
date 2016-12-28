@@ -5,7 +5,9 @@ use_frameworks!
 source 'https://github.com/CocoaPods/Specs.git'
 
 target 'Example' do
-	pod 'CompoundFetchedResultsController', :git => 'https://github.com/djbe/CompoundFetchedResultsController.git'
 	pod 'FetchedDataSource', :path => '../'
+
+	pod 'CompoundFetchedResultsController', :git => 'https://github.com/djbe/CompoundFetchedResultsController.git'
 	pod 'MagicalRecord'
+	pod 'Reusable'
 end

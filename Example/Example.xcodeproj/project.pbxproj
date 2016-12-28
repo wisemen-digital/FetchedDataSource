@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		DD86A0761E0DE1C200CD741B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD86A0681E0DE1C200CD741B /* AppDelegate.swift */; };
-		DD86A0771E0DE1C200CD741B /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD86A0691E0DE1C200CD741B /* StartViewController.swift */; };
 		DD86A0791E0DE1C200CD741B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DD86A06D1E0DE1C200CD741B /* Localizable.strings */; };
 		DD86A07A1E0DE1C200CD741B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD86A06F1E0DE1C200CD741B /* Main.storyboard */; };
 		DD86A07C1E0DE1C200CD741B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD86A0731E0DE1C200CD741B /* Images.xcassets */; };
@@ -25,7 +24,6 @@
 		D95E1C411D88E71A00F94976 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D95E1C891D88F39300F94976 /* AppwiseCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppwiseCore.framework; path = "../build/Debug-iphoneos/AppwiseCore.framework"; sourceTree = "<group>"; };
 		DD86A0681E0DE1C200CD741B /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		DD86A0691E0DE1C200CD741B /* StartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
 		DD86A06E1E0DE1C200CD741B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DD86A0701E0DE1C200CD741B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/Main.storyboard; sourceTree = "<group>"; };
 		DD86A0721E0DE1C200CD741B /* Example.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Example.xcdatamodel; sourceTree = "<group>"; };
@@ -97,7 +95,6 @@
 			isa = PBXGroup;
 			children = (
 				DD86A0681E0DE1C200CD741B /* AppDelegate.swift */,
-				DD86A0691E0DE1C200CD741B /* StartViewController.swift */,
 				DD86A07E1E0DE32000CD741B /* TableViewController.swift */,
 				DD86A0811E0EB3F800CD741B /* TableCell.swift */,
 			);
@@ -250,7 +247,6 @@
 				DD86A0801E0EA48500CD741B /* Example.xcdatamodeld in Sources */,
 				DD86A0761E0DE1C200CD741B /* AppDelegate.swift in Sources */,
 				DD86A07F1E0DE32000CD741B /* TableViewController.swift in Sources */,
-				DD86A0771E0DE1C200CD741B /* StartViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

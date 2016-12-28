@@ -6,22 +6,20 @@
 //  Copyright © 2016 dj. All rights reserved.
 //
 
-import CompoundFetchedResultsController
 import CoreData
 import FetchedDataSource
 import MagicalRecord
 import Reusable
 
 class TableViewController: UITableViewController {
-	var frc: NSFetchedResultsController<NSFetchRequestResult>!
-	var fetchedDataSource: FetchedDataSource<NSFetchRequestResult, TableViewController>!
+	var fetchedDataSource: FetchedDataSource<Item, TableViewController>!
 
 	private var fetchedDataTimer: Timer?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		fetchedDataSource = FetchedDataSource.for(tableView: tableView, controller: frc, delegate: self)
+		fetchedDataSource = FetchedDataSource.for(tableView: tableView, controller: itemsFRC, delegate: self)
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
@@ -64,18 +62,24 @@ class TableViewController: UITableViewController {
 
 		fetchedDataTimer?.invalidate()
 	}
+
+	private var itemsFRC: NSFetchedResultsController<Item> {
+		let moc = NSManagedObjectContext.mr_default()
+
+		return Item.mr_fetchAllGrouped(by: #keyPath(Item.section),
+		                               with: nil,
+		                               sortedBy: "\(#keyPath(Item.section)),\(#keyPath(Item.name))",
+		                               ascending: true,
+		                               in: moc) as! NSFetchedResultsController<Item>
+	}
 }
 
 extension TableViewController: FetchedDataSourceDelegate {
-	func cell(for indexPath: IndexPath, data: NSFetchRequestResult, view: UITableView) -> UITableViewCell {
+	func cell(for indexPath: IndexPath, data: Item, view: UITableView) -> UITableViewCell {
 		let cell = view.dequeueReusableCell(for: indexPath) as TableCell
 
-		if let item = data as? ValueWrapper<String> {
-			cell.configure(data: item.value)
-		} else if let item = data as? Item {
-			cell.configure(item: item)
-		}
-
+		cell.configure(item: data)
+		
 		return cell
 	}
 }

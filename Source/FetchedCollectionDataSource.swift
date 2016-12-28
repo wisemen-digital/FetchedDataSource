@@ -9,7 +9,7 @@
 import CoreData
 import UIKit
 
-class FetchedCollectionDataSource<FetchResult: NSFetchRequestResult, DelegateType: FetchedDataSourceDelegate where DelegateType.DataType == FetchResult, DelegateType.ViewType == UICollectionView, DelegateType.CellType == UICollectionViewCell> : FetchedDataSource<FetchResult, DelegateType>, UICollectionViewDataSource {
+class FetchedCollectionDataSource<FetchResult: NSFetchRequestResult, DelegateType: FetchedDataSourceDelegate where DelegateType.DataType == FetchResult, DelegateType.ViewType == UICollectionView, DelegateType.CellType == UICollectionViewCell>: FetchedDataSource<FetchResult, DelegateType>, UICollectionViewDataSource {
 
 	fileprivate var shouldReloadView = false
 	

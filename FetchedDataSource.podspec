@@ -15,6 +15,4 @@ Pod::Spec.new do |s|
 	s.frameworks	= 'Foundation', 'CoreData'
 	s.source		= { :git => 'https://github.org/djbe/FetchedDataSource.git', :tag => "#{s.version}" }
 	s.source_files	= 'Source/*.{swift}'
-	
-	s.dependency 'Reusable'
 end
