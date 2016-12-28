@@ -9,9 +9,9 @@
 import CoreData
 import UIKit
 
-class FetchedTableDataSource<FetchResult: NSFetchRequestResult, DelegateType: FetchedDataSourceDelegate where DelegateType.DataType == FetchResult, DelegateType.ViewType == UITableView, DelegateType.CellType == UITableViewCell> : FetchedDataSource<FetchResult, DelegateType>, UITableViewDataSource {
+class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: FetchedDataSourceDelegate where DelegateType.ViewType == UITableView, DelegateType.CellType == UITableViewCell> : FetchedDataSource<ResultType, DelegateType>, UITableViewDataSource {
 
-	override init(view: DelegateType.ViewType, controller: NSFetchedResultsController<FetchResult>, delegate: DelegateType) {
+	override init(view: DelegateType.ViewType, controller: ControllerType, delegate: DelegateType) {
 		super.init(view: view, controller: controller, delegate: delegate)
 
 		defer {
@@ -19,9 +19,9 @@ class FetchedTableDataSource<FetchResult: NSFetchRequestResult, DelegateType: Fe
 		}
 	}
 
-	public override func data(for cell: DelegateType.CellType) -> FetchResult? {
+	public override func object(for cell: DelegateType.CellType) -> DelegateType.DataType? {
 		guard let path = view?.indexPath(for: cell) else { return nil }
-		return controller.object(at: path)
+		return object(at: path)
 	}
 
 	// MARK: - UITableViewDataSource
@@ -37,7 +37,7 @@ class FetchedTableDataSource<FetchResult: NSFetchRequestResult, DelegateType: Fe
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		guard let delegate = delegate else { fatalError("Delegate cannot be nil") }
 
-		let data = controller.object(at: indexPath)
+		let data = object(at: indexPath)
 		let cell = delegate.cell(for: indexPath, data: data, view: tableView)
 
 		return cell
@@ -49,11 +49,11 @@ class FetchedTableDataSource<FetchResult: NSFetchRequestResult, DelegateType: Fe
 
 	// MARK: - NSFetchedResultsControllerDelegate
 
-	public override func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+	public override func controllerWillChangeContent(_ controller: ControllerType) {
 		view?.beginUpdates()
 	}
 
-	public override func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+	public override func controller(_ controller: ControllerType, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
 		switch type {
 		case .insert:
 			if let newIndexPath = newIndexPath {
@@ -77,7 +77,7 @@ class FetchedTableDataSource<FetchResult: NSFetchRequestResult, DelegateType: Fe
 		}
 	}
 
-	public override func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+	public override func controller(_ controller: ControllerType, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
 		changes.addSectionChange(type: type, index: sectionIndex)
 	}
 

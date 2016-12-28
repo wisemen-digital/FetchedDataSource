@@ -9,9 +9,11 @@
 import CoreData
 import UIKit
 
-public class FetchedDataSource<FetchResult: NSFetchRequestResult, DelegateType: FetchedDataSourceDelegate>: NSObject, NSFetchedResultsControllerDelegate {
+public class FetchedDataSource<ResultType: NSFetchRequestResult, DelegateType: FetchedDataSourceDelegate>: NSObject, NSFetchedResultsControllerDelegate {
 
-	let controller: NSFetchedResultsController<FetchResult>
+	public typealias ControllerType = NSFetchedResultsController<ResultType>
+
+	let controller: ControllerType
 	weak var delegate: DelegateType?
 	weak var view: DelegateType.ViewType?
 	lazy var changes = FetchedChanges()
@@ -21,7 +23,7 @@ public class FetchedDataSource<FetchResult: NSFetchRequestResult, DelegateType: 
 	*/
 	public var animations: [NSFetchedResultsChangeType: UITableViewRowAnimation]?
 
-	internal init(view: DelegateType.ViewType, controller: NSFetchedResultsController<FetchResult>, delegate: DelegateType) {
+	internal init(view: DelegateType.ViewType, controller: ControllerType, delegate: DelegateType) {
 		self.controller = controller
 		self.view = view
 		self.delegate = delegate
@@ -35,23 +37,27 @@ public class FetchedDataSource<FetchResult: NSFetchRequestResult, DelegateType: 
 
 	// MARK: - Helper methods
 
-	public func data(for indexPath: IndexPath) -> FetchResult {
-		return controller.object(at: indexPath)
+	public func object(at indexPath: IndexPath) -> DelegateType.DataType {
+		if let object = controller.object(at: indexPath) as? DelegateType.DataType {
+			return object
+		} else {
+			fatalError("Unable to cast object of type `\(ResultType.self)` to `\(DelegateType.DataType.self)`")
+		}
 	}
 
-	public func data(for cell: DelegateType.CellType) -> FetchResult? {
+	public func object(for cell: DelegateType.CellType) -> DelegateType.DataType? {
 		return nil
 	}
 
 	// MARK: - Empty NSFetchedResultsControllerDelegate methods
 
-	public func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+	public func controllerWillChangeContent(_ controller: ControllerType) {
 	}
 
-	public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+	public func controller(_ controller: ControllerType, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
 	}
 
-	public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+	public func controller(_ controller: ControllerType, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
 	}
 
 	public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {

@@ -9,11 +9,11 @@
 import CoreData
 import UIKit
 
-class FetchedCollectionDataSource<FetchResult: NSFetchRequestResult, DelegateType: FetchedDataSourceDelegate where DelegateType.DataType == FetchResult, DelegateType.ViewType == UICollectionView, DelegateType.CellType == UICollectionViewCell>: FetchedDataSource<FetchResult, DelegateType>, UICollectionViewDataSource {
+class FetchedCollectionDataSource<ResultType: NSFetchRequestResult, DelegateType: FetchedDataSourceDelegate where DelegateType.ViewType == UICollectionView, DelegateType.CellType == UICollectionViewCell>: FetchedDataSource<ResultType, DelegateType>, UICollectionViewDataSource {
 
 	fileprivate var shouldReloadView = false
 	
-	override init(view: DelegateType.ViewType, controller: NSFetchedResultsController<FetchResult>, delegate: DelegateType) {
+	override init(view: DelegateType.ViewType, controller: ControllerType, delegate: DelegateType) {
 		super.init(view: view, controller: controller, delegate: delegate)
 
 		defer {
@@ -21,9 +21,9 @@ class FetchedCollectionDataSource<FetchResult: NSFetchRequestResult, DelegateTyp
 		}
 	}
 
-	public override func data(for cell: DelegateType.CellType) -> FetchResult? {
+	public override func object(for cell: DelegateType.CellType) -> DelegateType.DataType? {
 		guard let path = view?.indexPath(for: cell) else { return nil }
-		return controller.object(at: path)
+		return object(at: path)
 	}
 
 	// MARK: - UICollectionViewDataSource
@@ -39,7 +39,7 @@ class FetchedCollectionDataSource<FetchResult: NSFetchRequestResult, DelegateTyp
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		guard let delegate = delegate else { fatalError("Delegate cannot be nil") }
 
-		let data = controller.object(at: indexPath)
+		let data = object(at: indexPath)
 		let cell = delegate.cell(for: indexPath, data: data, view: collectionView)
 
 		return cell
@@ -53,10 +53,10 @@ class FetchedCollectionDataSource<FetchResult: NSFetchRequestResult, DelegateTyp
 
 	// MARK: - NSFetchedResultsControllerDelegate
 
-	public override func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+	public override func controllerWillChangeContent(_ controller: ControllerType) {
 	}
 
-	public override func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+	public override func controller(_ controller: ControllerType, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
 		guard !shouldReloadView, let view = view else { return }
 
 		switch type {
@@ -90,7 +90,7 @@ class FetchedCollectionDataSource<FetchResult: NSFetchRequestResult, DelegateTyp
 		}
 	}
 
-	public override func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+	public override func controller(_ controller: ControllerType, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
 		guard !shouldReloadView else { return }
 		changes.addSectionChange(type: type, index: sectionIndex)
 	}

@@ -9,14 +9,20 @@
 import CoreData
 import UIKit
 
-public extension FetchedDataSource where DelegateType: FetchedDataSourceDelegate, FetchResult == DelegateType.DataType, DelegateType.ViewType == UITableView, DelegateType.CellType == UITableViewCell {
-	static func `for`(tableView: DelegateType.ViewType, controller: NSFetchedResultsController<FetchResult>, delegate: DelegateType) -> FetchedDataSource<FetchResult, DelegateType> {
-		return FetchedTableDataSource<FetchResult, DelegateType>(view: tableView, controller: controller, delegate: delegate)
+public extension FetchedDataSource where
+	DelegateType.ViewType == UITableView,
+	DelegateType.CellType == UITableViewCell {
+
+	static func `for`(tableView: DelegateType.ViewType, controller: ControllerType, delegate: DelegateType) -> FetchedDataSource<ResultType, DelegateType> {
+		return FetchedTableDataSource(view: tableView, controller: controller, delegate: delegate)
 	}
 }
 
-public extension FetchedDataSource where DelegateType: FetchedDataSourceDelegate, FetchResult == DelegateType.DataType, DelegateType.ViewType == UICollectionView, DelegateType.CellType == UICollectionViewCell {
-	static func `for`(collectionView: DelegateType.ViewType, controller: NSFetchedResultsController<FetchResult>, delegate: DelegateType) -> FetchedDataSource<FetchResult, DelegateType> {
-		return FetchedCollectionDataSource<FetchResult, DelegateType>(view: collectionView, controller: controller, delegate: delegate)
+public extension FetchedDataSource where
+	DelegateType.ViewType == UICollectionView,
+	DelegateType.CellType == UICollectionViewCell {
+
+	static func `for`(collectionView: DelegateType.ViewType, controller: ControllerType, delegate: DelegateType) -> FetchedDataSource<ResultType, DelegateType> {
+		return FetchedCollectionDataSource(view: collectionView, controller: controller, delegate: delegate)
 	}
 }
