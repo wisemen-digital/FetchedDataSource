@@ -50,14 +50,15 @@ public class FetchedDataSource<ResultType: NSFetchRequestResult, DelegateType: F
 	}
 
 	// MARK: - Empty NSFetchedResultsControllerDelegate methods
+	// Needed for correct method dispatch
 
-	public func controllerWillChangeContent(_ controller: ControllerType) {
+	public func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
 	}
 
-	public func controller(_ controller: ControllerType, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+	public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
 	}
 
-	public func controller(_ controller: ControllerType, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+	public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
 	}
 
 	public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {

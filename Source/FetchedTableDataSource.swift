@@ -49,11 +49,11 @@ class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: Fet
 
 	// MARK: - NSFetchedResultsControllerDelegate
 
-	public override func controllerWillChangeContent(_ controller: ControllerType) {
+	public override func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
 		view?.beginUpdates()
 	}
 
-	public override func controller(_ controller: ControllerType, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+	public override func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
 		switch type {
 		case .insert:
 			if let newIndexPath = newIndexPath {
@@ -77,7 +77,7 @@ class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: Fet
 		}
 	}
 
-	public override func controller(_ controller: ControllerType, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+	public override func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
 		changes.addSectionChange(type: type, index: sectionIndex)
 	}
 

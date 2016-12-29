@@ -53,10 +53,10 @@ class FetchedCollectionDataSource<ResultType: NSFetchRequestResult, DelegateType
 
 	// MARK: - NSFetchedResultsControllerDelegate
 
-	public override func controllerWillChangeContent(_ controller: ControllerType) {
+	public override func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
 	}
 
-	public override func controller(_ controller: ControllerType, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+	public override func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
 		guard !shouldReloadView, let view = view else { return }
 
 		switch type {
@@ -90,7 +90,7 @@ class FetchedCollectionDataSource<ResultType: NSFetchRequestResult, DelegateType
 		}
 	}
 
-	public override func controller(_ controller: ControllerType, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+	public override func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
 		guard !shouldReloadView else { return }
 		changes.addSectionChange(type: type, index: sectionIndex)
 	}
