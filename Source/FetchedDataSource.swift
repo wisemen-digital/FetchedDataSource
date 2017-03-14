@@ -36,6 +36,14 @@ public class FetchedDataSource<ResultType: NSFetchRequestResult, DelegateType: F
 	}
 
 	// MARK: - Helper methods
+	
+	public func index(for object: DelegateType.DataType) -> IndexPath? {
+		if let object = object as? ResultType {
+			return controller.indexPath(forObject: object)
+		} else {
+			fatalError("Unable to cast object of type '\(DelegateType.DataType.self)' to \(ResultType.self)")
+		}
+	}
 
 	public func object(at indexPath: IndexPath) -> DelegateType.DataType {
 		if let object = controller.object(at: indexPath) as? DelegateType.DataType {
