@@ -61,6 +61,7 @@ public class FetchedDataSource<ResultType: NSFetchRequestResult, DelegateType: F
 	// Needed for correct method dispatch
 
 	public func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+		delegate?.willChangeContent()
 	}
 
 	public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
@@ -70,5 +71,6 @@ public class FetchedDataSource<ResultType: NSFetchRequestResult, DelegateType: F
 	}
 
 	public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+		delegate?.didChangeContent()
 	}
 }

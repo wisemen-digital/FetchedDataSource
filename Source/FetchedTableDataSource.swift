@@ -50,10 +50,13 @@ class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: Fet
 	// MARK: - NSFetchedResultsControllerDelegate
 
 	public override func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+		super.controllerWillChangeContent(controller)
 		view?.beginUpdates()
 	}
 
 	public override func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+		super.controller(controller, didChange: anObject, at: indexPath, for: type, newIndexPath: newIndexPath)
+		
 		switch type {
 		case .insert:
 			if let newIndexPath = newIndexPath {
@@ -78,10 +81,13 @@ class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: Fet
 	}
 
 	public override func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+		super.controller(controller, didChange: sectionInfo, atSectionIndex: sectionIndex, for: type)
 		changes.addSectionChange(type: type, index: sectionIndex)
 	}
 
 	public override func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+		super.controllerDidChangeContent(controller)
+		
 		view?.deleteSections(changes.deletedSections, with: animations?[.delete] ?? .automatic)
 		view?.insertSections(changes.insertedSections, with: animations?[.insert] ?? .automatic)
 		view?.reloadSections(changes.updatedSections, with: animations?[.update] ?? .automatic)

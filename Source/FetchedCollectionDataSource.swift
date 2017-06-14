@@ -54,9 +54,11 @@ class FetchedCollectionDataSource<ResultType: NSFetchRequestResult, DelegateType
 	// MARK: - NSFetchedResultsControllerDelegate
 
 	public override func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+		super.controllerWillChangeContent(controller)
 	}
 
 	public override func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+		super.controller(controller, didChange: anObject, at: indexPath, for: type, newIndexPath: newIndexPath)
 		guard !shouldReloadView, let view = view else { return }
 
 		switch type {
@@ -91,11 +93,13 @@ class FetchedCollectionDataSource<ResultType: NSFetchRequestResult, DelegateType
 	}
 
 	public override func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+		super.controller(controller, didChange: sectionInfo, atSectionIndex: sectionIndex, for: type)
 		guard !shouldReloadView else { return }
 		changes.addSectionChange(type: type, index: sectionIndex)
 	}
 
 	public override func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+		super.controllerDidChangeContent(controller)
 		view?.collectionViewLayout.invalidateLayout()
 
 		if shouldReloadView {

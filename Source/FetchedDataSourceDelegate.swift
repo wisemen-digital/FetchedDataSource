@@ -13,7 +13,9 @@ public protocol FetchedDataSourceDelegate: class {
 	associatedtype DataType: NSFetchRequestResult
 	associatedtype ViewType: UIView
 	associatedtype CellType: UIView
-
+	
+	func willChangeContent()
+	func didChangeContent()
 	func cell(for indexPath: IndexPath, data: DataType, view: ViewType) -> CellType
 
 	// collection delegates
@@ -22,6 +24,12 @@ public protocol FetchedDataSourceDelegate: class {
 }
 
 public extension FetchedDataSourceDelegate {
+	func willChangeContent() {
+	}
+	
+	func didChangeContent() {
+	}
+	
 	func view(of kind: String, at indexPath: IndexPath, view: ViewType) -> UICollectionReusableView? {
 		return nil
 	}
