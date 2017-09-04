@@ -99,27 +99,38 @@ class FetchedCollectionDataSource<ResultType: NSFetchRequestResult, DelegateType
 	}
 
 	public override func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-		super.controllerDidChangeContent(controller)
 		view?.collectionViewLayout.invalidateLayout()
 
-		if shouldReloadView {
-			view?.reloadData()
+		if shouldReloadView || view?.window == nil {
+			finishChanges(reload: true, controller: controller)
 		} else {
 			view?.performBatchUpdates({ [weak self] in
-				guard let strongSelf = self else { return }
+				guard let changes = self?.changes else { return }
+				self?.apply(changes: changes)
+			}, completion: { [weak self] success in
+				self?.finishChanges(reload: !success, controller: controller)
+			})
+		}
+	}
 
-				strongSelf.view?.deleteSections(strongSelf.changes.deletedSections)
-				strongSelf.view?.insertSections(strongSelf.changes.insertedSections)
-				strongSelf.view?.reloadSections(strongSelf.changes.updatedSections)
-				strongSelf.view?.deleteItems(at: Array(strongSelf.changes.deletedObjects))
-				strongSelf.view?.insertItems(at: Array(strongSelf.changes.insertedObjects))
-				strongSelf.view?.reloadItems(at: Array(strongSelf.changes.updatedObjects))
-				for move in strongSelf.changes.movedObjects {
-					strongSelf.view?.moveItem(at: move.from, to: move.to)
-				}
-			}, completion: nil)
+	private func apply(changes: FetchedChanges) {
+		view?.deleteSections(changes.deletedSections)
+		view?.insertSections(changes.insertedSections)
+		view?.reloadSections(changes.updatedSections)
+		view?.deleteItems(at: Array(changes.deletedObjects))
+		view?.insertItems(at: Array(changes.insertedObjects))
+		view?.reloadItems(at: Array(changes.updatedObjects))
+		for move in changes.movedObjects {
+			view?.moveItem(at: move.from, to: move.to)
+		}
+	}
+
+	private func finishChanges(reload: Bool, controller: NSFetchedResultsController<NSFetchRequestResult>) {
+		if reload {
+			view?.reloadData()
 		}
 
+		super.controllerDidChangeContent(controller)
 		changes = FetchedChanges()
 		shouldReloadView = false
 	}

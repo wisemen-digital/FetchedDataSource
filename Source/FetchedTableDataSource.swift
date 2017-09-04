@@ -86,8 +86,18 @@ class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: Fet
 	}
 
 	public override func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+		if view?.window == nil {
+			view?.reloadData()
+		} else {
+			apply(changes: changes)
+			view?.endUpdates()
+		}
+
 		super.controllerDidChangeContent(controller)
-		
+		changes = FetchedChanges()
+	}
+
+	private func apply(changes: FetchedChanges) {
 		view?.deleteSections(changes.deletedSections, with: animations?[.delete] ?? .automatic)
 		view?.insertSections(changes.insertedSections, with: animations?[.insert] ?? .automatic)
 		view?.reloadSections(changes.updatedSections, with: animations?[.update] ?? .automatic)
@@ -97,8 +107,5 @@ class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: Fet
 		for move in changes.movedObjects {
 			view?.moveRow(at: move.from, to: move.to)
 		}
-		view?.endUpdates()
-
-		changes = FetchedChanges()
 	}
 }
