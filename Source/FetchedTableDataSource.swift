@@ -9,7 +9,7 @@
 import CoreData
 import UIKit
 
-class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: FetchedDataSourceDelegate where DelegateType.ViewType == UITableView, DelegateType.CellType == UITableViewCell> : FetchedDataSource<ResultType, DelegateType>, UITableViewDataSource {
+class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: FetchedDataSourceDelegate>: FetchedDataSource<ResultType, DelegateType>, UITableViewDataSource where DelegateType.ViewType == UITableView, DelegateType.CellType == UITableViewCell {
 
 	override init(view: DelegateType.ViewType, controller: ControllerType, delegate: DelegateType) {
 		super.init(view: view, controller: controller, delegate: delegate)
