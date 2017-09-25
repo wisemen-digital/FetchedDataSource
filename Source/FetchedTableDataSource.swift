@@ -9,7 +9,7 @@
 import CoreData
 import UIKit
 
-class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: FetchedDataSourceDelegate>: FetchedDataSource<ResultType, DelegateType>, UITableViewDataSource where DelegateType.ViewType == UITableView, DelegateType.CellType == UITableViewCell {
+class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: FetchedTableDataSourceDelegate>: FetchedDataSource<ResultType, DelegateType>, UITableViewDataSource {
 
 	override init(view: DelegateType.ViewType, controller: ControllerType, delegate: DelegateType) {
 		super.init(view: view, controller: controller, delegate: delegate)
@@ -44,7 +44,27 @@ class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: Fet
 	}
 
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		return controller.sections?[section].name
+		return delegate?.titleForHeader(in: section, view: tableView, default: controller.sections?[section].name)
+	}
+
+	func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+		return delegate?.titleForFooter(in: section, view: tableView)
+	}
+
+	func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+		return delegate?.canEditRow(at: indexPath, view: tableView) ?? true
+	}
+
+	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+		delegate?.commit(edit: editingStyle, forRowAt: indexPath, view: tableView)
+	}
+
+	func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+		return delegate?.canMoveItem(at: indexPath, view: tableView) ?? false
+	}
+
+	func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+		delegate?.moveItem(at: sourceIndexPath, to: destinationIndexPath, view: tableView)
 	}
 
 	// MARK: - NSFetchedResultsControllerDelegate

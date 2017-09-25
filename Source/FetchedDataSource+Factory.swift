@@ -10,8 +10,7 @@ import CoreData
 import UIKit
 
 public extension FetchedDataSource where
-	DelegateType.ViewType == UITableView,
-	DelegateType.CellType == UITableViewCell {
+	DelegateType: FetchedTableDataSourceDelegate {
 
 	static func `for`(tableView: DelegateType.ViewType, controller: ControllerType, delegate: DelegateType) -> FetchedDataSource<ResultType, DelegateType> {
 		return FetchedTableDataSource(view: tableView, controller: controller, delegate: delegate)
@@ -19,8 +18,7 @@ public extension FetchedDataSource where
 }
 
 public extension FetchedDataSource where
-	DelegateType.ViewType == UICollectionView,
-	DelegateType.CellType == UICollectionViewCell {
+	DelegateType: FetchedCollectionDataSourceDelegate {
 
 	static func `for`(collectionView: DelegateType.ViewType, controller: ControllerType, delegate: DelegateType) -> FetchedDataSource<ResultType, DelegateType> {
 		return FetchedCollectionDataSource(view: collectionView, controller: controller, delegate: delegate)

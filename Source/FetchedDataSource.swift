@@ -13,13 +13,13 @@ public class FetchedDataSource<ResultType: NSFetchRequestResult, DelegateType: F
 
 	public typealias ControllerType = NSFetchedResultsController<ResultType>
 
-	let controller: ControllerType
+	public let controller: ControllerType
 	weak var delegate: DelegateType?
 	weak var view: DelegateType.ViewType?
 	lazy var changes = FetchedChanges()
 
 	/**
-	Dictionary to configurate the different animations to be applied by each change type.
+	Dictionary to configure the different animations to be applied by each change type.
 	*/
 	public var animations: [NSFetchedResultsChangeType: UITableViewRowAnimation]?
 

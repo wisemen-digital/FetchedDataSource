@@ -9,7 +9,7 @@
 import CoreData
 import UIKit
 
-class FetchedCollectionDataSource<ResultType: NSFetchRequestResult, DelegateType: FetchedDataSourceDelegate>: FetchedDataSource<ResultType, DelegateType>, UICollectionViewDataSource where DelegateType.ViewType == UICollectionView, DelegateType.CellType == UICollectionViewCell {
+class FetchedCollectionDataSource<ResultType: NSFetchRequestResult, DelegateType: FetchedCollectionDataSourceDelegate>: FetchedDataSource<ResultType, DelegateType>, UICollectionViewDataSource {
 
 	fileprivate var shouldReloadView = false
 	
@@ -49,6 +49,14 @@ class FetchedCollectionDataSource<ResultType: NSFetchRequestResult, DelegateType
 		guard let delegate = delegate else { fatalError("Delegate cannot be nil") }
 
 		return delegate.view(of: kind, at: indexPath, view: collectionView) ?? UICollectionReusableView()
+	}
+
+	func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
+		return delegate?.canMoveItem(at: indexPath, view: collectionView) ?? false
+	}
+
+	func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+		delegate?.moveItem(at: sourceIndexPath, to: destinationIndexPath, view: collectionView)
 	}
 
 	// MARK: - NSFetchedResultsControllerDelegate
