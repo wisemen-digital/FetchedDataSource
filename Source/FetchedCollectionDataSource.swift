@@ -125,12 +125,16 @@ class FetchedCollectionDataSource<ResultType: NSFetchRequestResult, DelegateType
 		view?.deleteSections(changes.deletedSections)
 		view?.insertSections(changes.insertedSections)
 		view?.reloadSections(changes.updatedSections)
+
+		// NOTE: because of some bugs, we have to consider moves as delete "from" & insert "to"
+		// NOTE: because of some bugs, we have to consider reloads as delete & insert of the same path
 		view?.deleteItems(at: Array(changes.deletedObjects))
+		view?.deleteItems(at: changes.movedObjects.map { $0.from })
+		view?.deleteItems(at: Array(changes.updatedObjects))
+
 		view?.insertItems(at: Array(changes.insertedObjects))
-		view?.reloadItems(at: Array(changes.updatedObjects))
-		for move in changes.movedObjects {
-			view?.moveItem(at: move.from, to: move.to)
-		}
+		view?.insertItems(at: changes.movedObjects.map { $0.to })
+		view?.insertItems(at: Array(changes.updatedObjects))
 	}
 
 	private func finishChanges(reload: Bool, controller: NSFetchedResultsController<NSFetchRequestResult>) {

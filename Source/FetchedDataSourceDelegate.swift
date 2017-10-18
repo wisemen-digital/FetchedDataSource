@@ -36,6 +36,8 @@ public extension FetchedDataSourceDelegate {
 	}
 }
 
+// MARK: - Table Delegate
+
 public protocol FetchedTableDataSourceDelegate: FetchedDataSourceDelegate where ViewType == UITableView, CellType == UITableViewCell {
 	func titleForHeader(in section: Int, view: ViewType, default: String?) -> String?
 	func titleForFooter(in section: Int, view: ViewType) -> String?
@@ -60,6 +62,8 @@ public extension FetchedTableDataSourceDelegate {
 	func commit(edit: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath, view: ViewType) {
 	}
 }
+
+// MARK: - Collection Delegate
 
 public protocol FetchedCollectionDataSourceDelegate: FetchedDataSourceDelegate where ViewType == UICollectionView, CellType == UICollectionViewCell {
 	func view(of kind: String, at indexPath: IndexPath, view: ViewType) -> UICollectionReusableView?
