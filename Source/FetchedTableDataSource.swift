@@ -52,7 +52,7 @@ class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: Fet
 	}
 
 	func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-		return delegate?.canEditRow(at: indexPath, view: tableView) ?? true
+		return delegate?.canEditRow(at: indexPath, view: tableView) ?? false
 	}
 
 	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
