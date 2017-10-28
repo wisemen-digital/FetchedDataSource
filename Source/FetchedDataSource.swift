@@ -45,6 +45,11 @@ public class FetchedDataSource<ResultType: NSFetchRequestResult, DelegateType: F
 		}
 	}
 
+	public func contains(indexPath: IndexPath) -> Bool {
+		return indexPath.section < (controller.sections?.count ?? 0) &&
+			indexPath.row < (controller.sections?[indexPath.section].numberOfObjects ?? 0)
+	}
+
 	public func object(at indexPath: IndexPath) -> DelegateType.DataType {
 		if let object = controller.object(at: indexPath) as? DelegateType.DataType {
 			return object
