@@ -71,7 +71,9 @@ class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: Fet
 
 	public override func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
 		super.controllerWillChangeContent(controller)
-		view?.beginUpdates()
+		if isVisible && view?.window != nil {
+			view?.beginUpdates()
+		}
 	}
 
 	public override func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
@@ -106,7 +108,7 @@ class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: Fet
 	}
 
 	public override func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-		if view?.window == nil {
+		if !isVisible || view?.window == nil {
 			view?.reloadData()
 		} else {
 			apply(changes: changes)

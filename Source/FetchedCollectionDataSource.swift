@@ -109,7 +109,7 @@ class FetchedCollectionDataSource<ResultType: NSFetchRequestResult, DelegateType
 	public override func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
 		view?.collectionViewLayout.invalidateLayout()
 
-		if shouldReloadView || view?.window == nil {
+		if shouldReloadView || !isVisible || view?.window == nil {
 			finishChanges(reload: true, controller: controller)
 		} else {
 			view?.performBatchUpdates({ [weak self] in

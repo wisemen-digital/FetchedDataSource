@@ -17,6 +17,8 @@ public class FetchedDataSource<ResultType: NSFetchRequestResult, DelegateType: F
 	weak var delegate: DelegateType?
 	weak var view: DelegateType.ViewType?
 	lazy var changes = FetchedChanges()
+	var isVisible = true
+	var monitor: LifecycleBehaviorViewController<ResultType, DelegateType>!
 
 	/**
 	Dictionary to configure the different animations to be applied by each change type.
@@ -30,6 +32,14 @@ public class FetchedDataSource<ResultType: NSFetchRequestResult, DelegateType: F
 
 		defer {
 			controller.delegate = self
+
+			// monitor visibility
+			monitor = LifecycleBehaviorViewController(source: self)
+			if let vc = delegate as? UIViewController {
+				vc.addChildViewController(monitor)
+				vc.view.addSubview(monitor.view)
+				monitor.didMove(toParentViewController: vc)
+			}
 		}
 
 		super.init()
