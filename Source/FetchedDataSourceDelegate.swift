@@ -56,7 +56,7 @@ public extension FetchedTableDataSourceDelegate {
 	}
 
 	func canEditRow(at indexPath: IndexPath, view: ViewType) -> Bool {
-		return true
+		return false
 	}
 
 	func commit(edit: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath, view: ViewType) {
