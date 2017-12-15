@@ -11,8 +11,13 @@ import UIKit
 
 class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: FetchedTableDataSourceDelegate>: FetchedDataSource<ResultType, DelegateType>, UITableViewDataSource {
 
-	override init(view: DelegateType.ViewType, controller: ControllerType, delegate: DelegateType) {
-		super.init(view: view, controller: controller, delegate: delegate)
+	/**
+	Dictionary to configure the different animations to be applied by each change type.
+	*/
+	public var animations: [NSFetchedResultsChangeType: UITableViewRowAnimation]?
+
+	override init(view: DelegateType.ViewType, controller: ControllerType, delegate: DelegateType, animateChanges: Bool = true) {
+		super.init(view: view, controller: controller, delegate: delegate, animateChanges: animateChanges)
 
 		defer {
 			view.dataSource = self
@@ -71,7 +76,7 @@ class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: Fet
 
 	public override func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
 		super.controllerWillChangeContent(controller)
-		if isVisible && view?.window != nil {
+		if shouldAnimateChanges {
 			view?.beginUpdates()
 		}
 	}
@@ -108,15 +113,19 @@ class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: Fet
 	}
 
 	public override func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-		if !isVisible || view?.window == nil {
-			view?.reloadData()
-		} else {
+		if shouldAnimateChanges {
 			apply(changes: changes)
 			view?.endUpdates()
+		} else {
+			view?.reloadData()
 		}
 
 		super.controllerDidChangeContent(controller)
 		changes = FetchedChanges()
+	}
+
+	private var shouldAnimateChanges: Bool {
+		return isVisible && view?.window != nil && animateChanges
 	}
 
 	private func apply(changes: FetchedChanges) {

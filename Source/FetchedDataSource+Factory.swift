@@ -12,15 +12,15 @@ import UIKit
 public extension FetchedDataSource where
 	DelegateType: FetchedTableDataSourceDelegate {
 
-	static func `for`(tableView: DelegateType.ViewType, controller: ControllerType, delegate: DelegateType) -> FetchedDataSource<ResultType, DelegateType> {
-		return FetchedTableDataSource(view: tableView, controller: controller, delegate: delegate)
+	static func `for`(tableView: DelegateType.ViewType, controller: ControllerType, delegate: DelegateType, animateChanges: Bool = true) -> FetchedDataSource<ResultType, DelegateType> {
+		return FetchedTableDataSource(view: tableView, controller: controller, delegate: delegate, animateChanges: animateChanges)
 	}
 }
 
 public extension FetchedDataSource where
 	DelegateType: FetchedCollectionDataSourceDelegate {
 
-	static func `for`(collectionView: DelegateType.ViewType, controller: ControllerType, delegate: DelegateType) -> FetchedDataSource<ResultType, DelegateType> {
-		return FetchedCollectionDataSource(view: collectionView, controller: controller, delegate: delegate)
+	static func `for`(collectionView: DelegateType.ViewType, controller: ControllerType, delegate: DelegateType, animateChanges: Bool = true) -> FetchedDataSource<ResultType, DelegateType> {
+		return FetchedCollectionDataSource(view: collectionView, controller: controller, delegate: delegate, animateChanges: animateChanges)
 	}
 }

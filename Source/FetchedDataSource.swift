@@ -14,21 +14,18 @@ public class FetchedDataSource<ResultType: NSFetchRequestResult, DelegateType: F
 	public typealias ControllerType = NSFetchedResultsController<ResultType>
 
 	public let controller: ControllerType
+	public var animateChanges: Bool
 	weak var delegate: DelegateType?
 	weak var view: DelegateType.ViewType?
 	lazy var changes = FetchedChanges()
 	var isVisible = true
 	var monitor: LifecycleBehaviorViewController<ResultType, DelegateType>!
 
-	/**
-	Dictionary to configure the different animations to be applied by each change type.
-	*/
-	public var animations: [NSFetchedResultsChangeType: UITableViewRowAnimation]?
-
-	internal init(view: DelegateType.ViewType, controller: ControllerType, delegate: DelegateType) {
+	internal init(view: DelegateType.ViewType, controller: ControllerType, delegate: DelegateType, animateChanges: Bool) {
 		self.controller = controller
 		self.view = view
 		self.delegate = delegate
+		self.animateChanges = animateChanges
 
 		defer {
 			controller.delegate = self

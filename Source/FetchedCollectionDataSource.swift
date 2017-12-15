@@ -13,8 +13,8 @@ class FetchedCollectionDataSource<ResultType: NSFetchRequestResult, DelegateType
 
 	fileprivate var shouldReloadView = false
 	
-	override init(view: DelegateType.ViewType, controller: ControllerType, delegate: DelegateType) {
-		super.init(view: view, controller: controller, delegate: delegate)
+	override init(view: DelegateType.ViewType, controller: ControllerType, delegate: DelegateType, animateChanges: Bool = true) {
+		super.init(view: view, controller: controller, delegate: delegate, animateChanges: animateChanges)
 
 		defer {
 			view.dataSource = self
@@ -109,16 +109,20 @@ class FetchedCollectionDataSource<ResultType: NSFetchRequestResult, DelegateType
 	public override func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
 		view?.collectionViewLayout.invalidateLayout()
 
-		if shouldReloadView || !isVisible || view?.window == nil {
-			finishChanges(reload: true, controller: controller)
-		} else {
+		if shouldAnimateChanges {
 			view?.performBatchUpdates({ [weak self] in
 				guard let changes = self?.changes else { return }
 				self?.apply(changes: changes)
 			}, completion: { [weak self] success in
 				self?.finishChanges(reload: !success, controller: controller)
 			})
+		} else {
+			finishChanges(reload: true, controller: controller)
 		}
+	}
+
+	private var shouldAnimateChanges: Bool {
+		return !shouldReloadView && isVisible && view?.window != nil && animateChanges
 	}
 
 	private func apply(changes: FetchedChanges) {
