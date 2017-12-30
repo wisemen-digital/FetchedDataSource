@@ -3,6 +3,7 @@
 [![Version](https://img.shields.io/cocoapods/v/FetchedDataSource.svg?style=flat)](http://cocoadocs.org/docsets/FetchedDataSource)
 [![License](https://img.shields.io/cocoapods/l/FetchedDataSource.svg?style=flat)](http://cocoadocs.org/docsets/FetchedDataSource)
 [![Platform](https://img.shields.io/cocoapods/p/FetchedDataSource.svg?style=flat)](http://cocoadocs.org/docsets/FetchedDataSource)
+[![Swift version](https://img.shields.io/badge/Swift-4-orange.svg)](https://cocoapods.org/pods/FetchedDataSource)
 
 This is a class cluster of generic classes that will handle using a NSFetchedResultsController together with a UITableView or a UICollectionView.
 

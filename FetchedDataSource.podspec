@@ -10,9 +10,11 @@ Pod::Spec.new do |s|
 	
 	# configuration
 	s.platform		= :ios, '8.0'
+	s.swift_version = '4.0'
+	s.static_framework = true
 	
 	# files
-	s.frameworks	= 'Foundation', 'CoreData'
+	s.frameworks	= 'Foundation', 'CoreData', 'UIKit'
 	s.source		= { :git => 'https://github.org/djbe/FetchedDataSource.git', :tag => "#{s.version}" }
 	s.source_files	= 'Source/*.{swift}'
 end
