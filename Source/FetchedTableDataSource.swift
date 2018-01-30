@@ -57,7 +57,7 @@ class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: Fet
 	}
 
 	func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-		return delegate?.sectionIndexTitles(for: tableView)
+		return delegate?.sectionIndexTitles(forView: tableView)
 	}
 
 	func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {

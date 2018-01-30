@@ -45,7 +45,7 @@ public protocol FetchedTableDataSourceDelegate: FetchedDataSourceDelegate where 
 	func canEditRow(at indexPath: IndexPath, view: ViewType) -> Bool
 	func commit(edit: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath, view: ViewType)
 
-	func sectionIndexTitles(for view: ViewType) -> [String]?
+	func sectionIndexTitles(forView view: ViewType) -> [String]?
 	func section(forSectionIndexTitle title: String, at index: Int, view: ViewType) -> Int
 }
 
@@ -65,7 +65,7 @@ public extension FetchedTableDataSourceDelegate {
 	func commit(edit: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath, view: ViewType) {
 	}
 
-	func sectionIndexTitles(for view: ViewType) -> [String]? {
+	func sectionIndexTitles(forView view: ViewType) -> [String]? {
 		return nil
 	}
 
