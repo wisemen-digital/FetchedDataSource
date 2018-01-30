@@ -56,6 +56,14 @@ class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: Fet
 		return delegate?.titleForFooter(in: section, view: tableView)
 	}
 
+	func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+		return delegate?.sectionIndexTitles(for: tableView)
+	}
+
+	func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
+		return delegate?.section(forSectionIndexTitle: title, at: index, view: tableView) ?? index
+	}
+
 	func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
 		return delegate?.canEditRow(at: indexPath, view: tableView) ?? false
 	}
