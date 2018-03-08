@@ -69,6 +69,9 @@ class FetchedCollectionDataSource<ResultType: NSFetchRequestResult, DelegateType
 		super.controller(controller, didChange: anObject, at: indexPath, for: type, newIndexPath: newIndexPath)
 		guard !shouldReloadView, let view = view else { return }
 
+		// potential fix for https://forums.developer.apple.com/thread/4999
+		guard type.rawValue != 0 else { return }
+
 		switch type {
 		case .insert:
 			// handle bug http://openradar.appspot.com/12954582

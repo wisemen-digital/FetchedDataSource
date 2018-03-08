@@ -92,6 +92,9 @@ class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: Fet
 	public override func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
 		super.controller(controller, didChange: anObject, at: indexPath, for: type, newIndexPath: newIndexPath)
 		
+		// potential fix for https://forums.developer.apple.com/thread/4999
+		guard type.rawValue != 0 else { return }
+
 		switch type {
 		case .insert:
 			if let newIndexPath = newIndexPath {
