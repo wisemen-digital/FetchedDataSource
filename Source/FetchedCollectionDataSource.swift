@@ -76,7 +76,7 @@ class FetchedCollectionDataSource<ResultType: NSFetchRequestResult, DelegateType
 		case .insert:
 			// handle bug http://openradar.appspot.com/12954582
 			if let newIndexPath = newIndexPath {
-				if view.numberOfSections == 0 || view.numberOfItems(inSection: newIndexPath.section) == 0 {
+				if view.numberOfSections == 0 || (newIndexPath.section < view.numberOfSections && view.numberOfItems(inSection: newIndexPath.section) == 0) {
 					shouldReloadView = true
 				} else {
 					changes.addObjectChange(type: type, path: newIndexPath)
@@ -85,7 +85,7 @@ class FetchedCollectionDataSource<ResultType: NSFetchRequestResult, DelegateType
 		case .delete:
 			// handle bug http://openradar.appspot.com/12954582
 			if let indexPath = indexPath {
-				if view.numberOfItems(inSection: indexPath.section) == 1 {
+				if (indexPath.section < view.numberOfSections && view.numberOfItems(inSection: indexPath.section) == 1) {
 					shouldReloadView = true
 				} else {
 					changes.addObjectChange(type: type, path: indexPath)
