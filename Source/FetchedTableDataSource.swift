@@ -7,10 +7,10 @@
 //
 
 import CoreData
+import SwiftTryCatch
 import UIKit
 
 class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: FetchedTableDataSourceDelegate>: FetchedDataSource<ResultType, DelegateType>, UITableViewDataSource {
-
 	/**
 	Dictionary to configure the different animations to be applied by each change type.
 	*/
@@ -139,15 +139,19 @@ class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: Fet
 	}
 
 	public override func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-		if shouldAnimateChanges {
-			apply(changes: changes)
-			view?.endUpdates()
-		} else {
-			view?.reloadData()
-		}
-
-		super.controllerDidChangeContent(controller)
-		changes = FetchedChanges()
+		SwiftTryCatch.try({
+			if self.shouldAnimateChanges {
+				self.apply(changes: self.changes)
+				self.view?.endUpdates()
+			} else {
+				self.view?.reloadData()
+			}
+		}, catch: { [weak self] exception in
+			self?.view?.reloadData()
+		}, finally: {
+			super.controllerDidChangeContent(controller)
+			self.changes = FetchedChanges()
+		})
 	}
 
 	private var shouldAnimateChanges: Bool {
