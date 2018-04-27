@@ -62,6 +62,12 @@ class FetchedCollectionDataSource<ResultType: NSFetchRequestResult, DelegateType
 	// MARK: - NSFetchedResultsControllerDelegate
 
 	public override func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+		if let view = view {
+			changes.viewSectionsCache = (0..<view.numberOfSections).map {
+				view.numberOfItems(inSection: $0)
+			}
+		}
+
 		super.controllerWillChangeContent(controller)
 	}
 
@@ -69,31 +75,46 @@ class FetchedCollectionDataSource<ResultType: NSFetchRequestResult, DelegateType
 		super.controller(controller, didChange: anObject, at: indexPath, for: type, newIndexPath: newIndexPath)
 		guard !shouldReloadView, let view = view else { return }
 
-		// potential fix for https://forums.developer.apple.com/thread/4999
-		guard type.rawValue != 0 else { return }
+		guard var actualType = NSFetchedResultsChangeType(rawValue: type.rawValue) else {
+            // This fix is for a bug where iOS passes 0 for NSFetchedResultsChangeType, but this is not a valid enum case.
+            // Swift will then always execute the first case of the switch causing strange behaviour.
+            // https://forums.developer.apple.com/thread/12184#31850
+            return
+        }
+        
+        // This whole dance is a workaround for a nasty bug introduced in XCode 7 targeted at iOS 8 devices
+        // http://stackoverflow.com/questions/31383760/ios-9-attempt-to-delete-and-reload-the-same-index-path/31384014#31384014
+        // https://forums.developer.apple.com/message/9998#9998
+        // https://forums.developer.apple.com/message/31849#31849
+        if #available(iOS 10.0, tvOS 10.0, watchOS 3.0, *) {
+            // I don't know if iOS 10 even attempted to fix this mess...
+            if case .update = actualType, indexPath != nil, newIndexPath != nil {
+                actualType = .move
+            }
+        }
 
-		switch type {
+		switch actualType {
 		case .insert:
 			// handle bug http://openradar.appspot.com/12954582
 			if let newIndexPath = newIndexPath {
-				if view.numberOfSections == 0 || (newIndexPath.section < view.numberOfSections && view.numberOfItems(inSection: newIndexPath.section) == 0) {
+				if changes.viewSectionsCache.isEmpty || (newIndexPath.section < changes.viewSectionsCache.count && changes.viewSectionsCache[newIndexPath.section] == 0) {
 					shouldReloadView = true
 				} else {
-					changes.addObjectChange(type: type, path: newIndexPath)
+					changes.addObjectChange(type: actualType, path: newIndexPath)
 				}
 			}
 		case .delete:
 			// handle bug http://openradar.appspot.com/12954582
 			if let indexPath = indexPath {
-				if (indexPath.section < view.numberOfSections && view.numberOfItems(inSection: indexPath.section) == 1) {
+				if (indexPath.section < changes.viewSectionsCache.count && changes.viewSectionsCache[indexPath.section] == 1) {
 					shouldReloadView = true
 				} else {
-					changes.addObjectChange(type: type, path: indexPath)
+					changes.addObjectChange(type: actualType, path: indexPath)
 				}
 			}
 		case .update:
 			if let indexPath = indexPath {
-				changes.addObjectChange(type: type, path: indexPath)
+				changes.addObjectChange(type: actualType, path: indexPath)
 			}
 		case .move:
 			if let indexPath = indexPath, let newIndexPath = newIndexPath {

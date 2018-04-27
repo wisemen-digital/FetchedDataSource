@@ -92,23 +92,38 @@ class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: Fet
 	public override func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
 		super.controller(controller, didChange: anObject, at: indexPath, for: type, newIndexPath: newIndexPath)
 		
-		// potential fix for https://forums.developer.apple.com/thread/4999
-		guard type.rawValue != 0 else { return }
+		 guard var actualType = NSFetchedResultsChangeType(rawValue: type.rawValue) else {
+            // This fix is for a bug where iOS passes 0 for NSFetchedResultsChangeType, but this is not a valid enum case.
+            // Swift will then always execute the first case of the switch causing strange behaviour.
+            // https://forums.developer.apple.com/thread/12184#31850
+            return
+        }
+        
+        // This whole dance is a workaround for a nasty bug introduced in XCode 7 targeted at iOS 8 devices
+        // http://stackoverflow.com/questions/31383760/ios-9-attempt-to-delete-and-reload-the-same-index-path/31384014#31384014
+        // https://forums.developer.apple.com/message/9998#9998
+        // https://forums.developer.apple.com/message/31849#31849
+        if #available(iOS 10.0, tvOS 10.0, watchOS 3.0, *) {
+            // I don't know if iOS 10 even attempted to fix this mess...
+            if case .update = actualType, indexPath != nil, newIndexPath != nil {
+                actualType = .move
+            }
+        }
 
-		switch type {
+		switch actualType {
 		case .insert:
 			if let newIndexPath = newIndexPath {
-				changes.addObjectChange(type: type, path: newIndexPath)
+				changes.addObjectChange(type: actualType, path: newIndexPath)
 			}
 		case .delete:
 			if let indexPath = indexPath {
-				changes.addObjectChange(type: type, path: indexPath)
+				changes.addObjectChange(type: actualType, path: indexPath)
 			}
 		case .update:
 			// avoid crash when updating non-visible rows:
 			// http://stackoverflow.com/questions/11432556/nsrangeexception-exception-in-nsfetchedresultschangeupdate-event-of-nsfetchedres
 			if let indexPath = indexPath, let _ = view?.indexPathsForVisibleRows?.index(of: indexPath) {
-				changes.addObjectChange(type: type, path: indexPath)
+				changes.addObjectChange(type: actualType, path: indexPath)
 			}
 		case .move:
 			if let indexPath = indexPath, let newIndexPath = newIndexPath {

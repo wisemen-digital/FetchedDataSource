@@ -10,6 +10,7 @@ import CoreData
 import Foundation
 
 struct FetchedChanges {
+	var viewSectionsCache = [Int]()
 	var deletedObjects = Set<IndexPath>()
 	var insertedObjects = Set<IndexPath>()
 	var updatedObjects = Set<IndexPath>()
@@ -46,7 +47,7 @@ struct FetchedChanges {
 		} else if deletedSections.contains(from.section) || updatedSections.contains(from.section) {
 			addObjectChange(type: .insert, path: to)
 		} else if insertedSections.contains(to.section) || updatedSections.contains(to.section) {
-			addObjectChange(type: .delete, path: to)
+			addObjectChange(type: .delete, path: from)
 		} else {
 			movedObjects += [(from: from, to: to)]
 		}
