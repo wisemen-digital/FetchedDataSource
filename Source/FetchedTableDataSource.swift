@@ -166,7 +166,8 @@ class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: Fet
 		view?.insertRows(at: Array(changes.insertedObjects), with: animations?[.insert] ?? .automatic)
 		view?.reloadRows(at: Array(changes.updatedObjects), with: animations?[.update] ?? .automatic)
 		for move in changes.movedObjects {
-			view?.moveRow(at: move.from, to: move.to)
+			view?.deleteRows(at: [move.from], with: animations?[.delete] ?? .automatic)
+			view?.insertRows(at: [move.to], with: animations?[.insert] ?? .automatic)
 		}
 	}
 }
