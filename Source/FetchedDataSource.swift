@@ -10,7 +10,6 @@ import CoreData
 import UIKit
 
 public class FetchedDataSource<ResultType: NSFetchRequestResult, DelegateType: FetchedDataSourceDelegate>: NSObject, NSFetchedResultsControllerDelegate {
-
 	public typealias ControllerType = NSFetchedResultsController<ResultType>
 
 	public let controller: ControllerType
@@ -43,7 +42,11 @@ public class FetchedDataSource<ResultType: NSFetchRequestResult, DelegateType: F
 	}
 
 	// MARK: - Helper methods
-	
+
+	/// Try to find the index path for a given object.
+	///
+	/// - Parameter object: The object to search for.
+	/// - Returns: The index path for the object (if found) or `nil`.
 	public func index(for object: DelegateType.DataType) -> IndexPath? {
 		if let object = object as? ResultType {
 			return controller.indexPath(forObject: object)
@@ -51,13 +54,24 @@ public class FetchedDataSource<ResultType: NSFetchRequestResult, DelegateType: F
 			fatalError("Unable to cast object of type '\(DelegateType.DataType.self)' to \(ResultType.self)")
 		}
 	}
-
+	
+	/// Check if the controller contains the given index path (section and row/item).
+	///
+	/// - Parameter indexPath: The index path to check.
+	/// - Returns: True if the path is within bounds.
 	public func contains(indexPath: IndexPath) -> Bool {
 		return indexPath.section < (controller.sections?.count ?? 0) &&
 			indexPath.row < (controller.sections?[indexPath.section].numberOfObjects ?? 0)
 	}
 
+	/// Try to get the object at the given index path.
+	/// Note: this function will fatalError if the path is out of bounds.
+	///
+	/// - Parameter indexPath: The index path to fetch.
+	/// - Returns: The requested object (if within bounds).
 	public func object(at indexPath: IndexPath) -> DelegateType.DataType {
+		guard contains(indexPath: indexPath) else { fatalError("The index path is out of bounds for the controller: \(indexPath)") }
+
 		if let object = controller.object(at: indexPath) as? DelegateType.DataType {
 			return object
 		} else {
@@ -65,6 +79,10 @@ public class FetchedDataSource<ResultType: NSFetchRequestResult, DelegateType: F
 		}
 	}
 
+	/// Try to find the object corresponding to a cell.
+	///
+	/// - Parameter object: The cell to search for.
+	/// - Returns: The object matching the cell (if found) or `nil`.
 	public func object(for cell: DelegateType.CellType) -> DelegateType.DataType? {
 		return nil
 	}
