@@ -64,6 +64,11 @@ public class FetchedDataSource<ResultType: NSFetchRequestResult, DelegateType: F
 			indexPath.row < (controller.sections?[indexPath.section].numberOfObjects ?? 0)
 	}
 
+	/// A Boolean value indicating whether the controller is empty.
+	public var isEmpty: Bool {
+		return controller.fetchedObjects?.isEmpty ?? true
+	}
+
 	/// Try to get the object at the given index path.
 	/// Note: this function will fatalError if the path is out of bounds.
 	///
@@ -85,6 +90,15 @@ public class FetchedDataSource<ResultType: NSFetchRequestResult, DelegateType: F
 	/// - Returns: The object matching the cell (if found) or `nil`.
 	public func object(for cell: DelegateType.CellType) -> DelegateType.DataType? {
 		return nil
+	}
+
+	/// Get the section information for a given index.
+	///
+	/// - Parameter section: The section's index.
+	/// - Returns: The section information (if within bounds) or `nil`.
+	public func section(at section: Int) -> NSFetchedResultsSectionInfo? {
+		guard section < (controller.sections?.count ?? 0) else { return nil }
+		return controller.sections?[section]
 	}
 
 	// MARK: - Empty NSFetchedResultsControllerDelegate methods
