@@ -6,7 +6,7 @@
 //  Copyright © 2016. All rights reserved.
 //
 
-import CoreData
+@_exported import CoreData
 import UIKit
 
 public class FetchedDataSource<ResultType: NSFetchRequestResult, DelegateType: FetchedDataSourceDelegate>: NSObject, NSFetchedResultsControllerDelegate {
