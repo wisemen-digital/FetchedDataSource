@@ -28,6 +28,11 @@ public class FetchedDataSource<ResultType: NSFetchRequestResult, DelegateType: F
 
 		defer {
 			controller.delegate = self
+			do {
+				try controller.performFetch()
+			} catch let error {
+				fatalError("Error performing controller fetch: \(error)")
+			}
 
 			// monitor visibility
 			monitor = LifecycleBehaviorViewController(source: self)
