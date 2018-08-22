@@ -37,9 +37,9 @@ public class FetchedDataSource<ResultType: NSFetchRequestResult, DelegateType: F
 			// monitor visibility
 			monitor = LifecycleBehaviorViewController(source: self)
 			if let vc = delegate as? UIViewController {
-				vc.addChildViewController(monitor)
+				vc.addChild(monitor)
 				vc.view.addSubview(monitor.view)
-				monitor.didMove(toParentViewController: vc)
+				monitor.didMove(toParent: vc)
 			}
 		}
 

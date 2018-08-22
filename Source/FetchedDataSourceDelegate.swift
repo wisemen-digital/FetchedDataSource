@@ -68,7 +68,7 @@ public protocol FetchedTableDataSourceDelegate: FetchedDataSourceDelegate where 
 	func titleForFooter(in section: Int, view: ViewType) -> String?
 
 	func canEditRow(at indexPath: IndexPath, view: ViewType) -> Bool
-	func commit(edit: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath, view: ViewType)
+	func commit(edit: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath, view: ViewType)
 
 	func sectionIndexTitles(forView view: ViewType) -> [String]?
 	func section(forSectionIndexTitle title: String, at index: Int, view: ViewType) -> Int
@@ -87,7 +87,7 @@ public extension FetchedTableDataSourceDelegate {
 		return false
 	}
 
-	func commit(edit: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath, view: ViewType) {
+	func commit(edit: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath, view: ViewType) {
 	}
 
 	func sectionIndexTitles(forView view: ViewType) -> [String]? {

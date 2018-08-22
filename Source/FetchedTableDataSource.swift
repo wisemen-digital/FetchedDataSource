@@ -14,7 +14,7 @@ class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: Fet
 	/**
 	Dictionary to configure the different animations to be applied by each change type.
 	*/
-	public var animations: [NSFetchedResultsChangeType: UITableViewRowAnimation]?
+	public var animations: [NSFetchedResultsChangeType: UITableView.RowAnimation]?
 
 	override init(view: DelegateType.ViewType, controller: ControllerType, delegate: DelegateType, animateChanges: Bool = true) {
 		super.init(view: view, controller: controller, delegate: delegate, animateChanges: animateChanges)
@@ -68,7 +68,7 @@ class FetchedTableDataSource<ResultType: NSFetchRequestResult, DelegateType: Fet
 		return delegate?.canEditRow(at: indexPath, view: tableView) ?? false
 	}
 
-	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
 		delegate?.commit(edit: editingStyle, forRowAt: indexPath, view: tableView)
 	}
 

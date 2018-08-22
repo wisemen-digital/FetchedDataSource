@@ -15,7 +15,7 @@ To try the example project, just run the following command:
 
 ## Requirements
 
-Requires Swift 3 and iOS 8 or higher.
+Requires Swift 4 and iOS 8 or higher.
 
 ## Installation
 
