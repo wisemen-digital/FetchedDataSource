@@ -6,7 +6,6 @@
 //
 
 import CoreData
-import SwiftTryCatch
 import UIKit
 
 final class TableFetchedResultsObserver<ResultType: NSFetchRequestResult>: FetchedResultsObserver<ResultType> {
@@ -77,7 +76,7 @@ final class TableFetchedResultsObserver<ResultType: NSFetchRequestResult>: Fetch
 	}
 
 	override func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-		SwiftTryCatch.try({
+		FetchedDataSourceSwiftTryCatch.try({
 			if self.shouldAnimateChanges {
 				self.apply(changes: self.changes)
 				self.view?.endUpdates()

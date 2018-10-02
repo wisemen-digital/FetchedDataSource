@@ -6,7 +6,6 @@
 //
 
 import CoreData
-import SwiftTryCatch
 import UIKit
 
 final class TableDataSource<DelegateType: TableDataSourceDelegate>: DataSource<DelegateType.ResultType>, UITableViewDataSource {
