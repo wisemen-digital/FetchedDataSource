@@ -9,11 +9,11 @@
 import CoreData
 import UIKit
 
-final class LifecycleBehaviorViewController<ResultType: NSFetchRequestResult, DelegateType: FetchedDataSourceDelegate>: UIViewController {
-	weak var source: FetchedDataSource<ResultType, DelegateType>?
+final class LifecycleBehaviorViewController: UIViewController {
+	var handler: (Bool) -> Void
 
-	required init(source: FetchedDataSource<ResultType, DelegateType>) {
-		self.source = source
+	required init(handler: @escaping (Bool) -> Void) {
+		self.handler = handler
 		super.init(nibName: nil, bundle: nil)
 	}
 
@@ -28,11 +28,11 @@ final class LifecycleBehaviorViewController<ResultType: NSFetchRequestResult, De
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		source?.isVisible = true
+		handler(true)
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
-		source?.isVisible = false
+		handler(false)
 	}
 }
