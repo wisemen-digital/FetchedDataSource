@@ -31,7 +31,7 @@ final class CollectionFetchedResultsObserver<ResultType: NSFetchRequestResult>: 
 
 	override func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
 		super.controller(controller, didChange: anObject, at: indexPath, for: type, newIndexPath: newIndexPath)
-		guard !shouldReloadView, let view = view else { return }
+		guard !shouldReloadView else { return }
 
 		guard var actualType = NSFetchedResultsChangeType(rawValue: type.rawValue) else {
 			// This fix is for a bug where iOS passes 0 for NSFetchedResultsChangeType, but this is not a valid enum case.

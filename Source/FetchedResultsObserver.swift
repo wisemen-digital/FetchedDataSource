@@ -33,8 +33,10 @@ class FetchedResultsObserver<ResultType: NSFetchRequestResult>: NSObject, NSFetc
 			vc.addChild(monitor)
 			vc.view.addSubview(monitor.view)
 			monitor.didMove(toParent: vc)
-		} else {
+		} else if let delegate = delegate {
 			fatalError("Delegate must be a UIViewController, instead got \(delegate)")
+		} else {
+			// Delegate is nil, not sure if we should crash or not
 		}
 		self.monitor = monitor
 	}

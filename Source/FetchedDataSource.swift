@@ -9,7 +9,7 @@
 import CoreData
 import UIKit
 
-class __FetchedDataSource<ResultType: NSFetchRequestResult, CellType: UIView> {
+public class __FetchedDataSource<ResultType: NSFetchRequestResult, CellType: UIView> {
 	public let controller: NSFetchedResultsController<ResultType>
 
 	internal init(controller: NSFetchedResultsController<ResultType>) {
