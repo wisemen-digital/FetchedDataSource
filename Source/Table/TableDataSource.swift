@@ -35,6 +35,7 @@ final class TableDataSource<DelegateType: TableDataSourceDelegate>: DataSource<D
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		guard section < (controller.sections?.count ?? 0) else { return 0 }
 		return controller.sections?[section].numberOfObjects ?? 0
 	}
 
