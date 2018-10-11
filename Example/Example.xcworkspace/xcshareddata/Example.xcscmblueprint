@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "0669645F84D9D9045731AF1027D45CA426882E4E",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "7290668191AD26B5A0051366CB8EC386B391B87B" : 9223372036854775807,
+    "0669645F84D9D9045731AF1027D45CA426882E4E" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "DBCFFB93-AF43-43C8-BC96-034972BC8E15",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "7290668191AD26B5A0051366CB8EC386B391B87B" : "CompoundFetchedResultsController\/",
+    "0669645F84D9D9045731AF1027D45CA426882E4E" : "FetchedDataSource\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Example",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Example\/Example.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:djbe\/FetchedDataSource.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "0669645F84D9D9045731AF1027D45CA426882E4E"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:djbe\/CompoundFetchedResultsController.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "7290668191AD26B5A0051366CB8EC386B391B87B"
+    }
+  ]
+}
