@@ -1,13 +1,11 @@
 platform :ios, '9.0'
 
-inhibit_all_warnings!
-use_frameworks!
 source 'https://github.com/CocoaPods/Specs.git'
 
 target 'Example' do
 	pod 'FetchedDataSource', :path => '../'
 
-	pod 'CompoundFetchedResultsController', :git => 'https://github.com/djbe/CompoundFetchedResultsController.git'
-	pod 'MagicalRecord'
+	pod 'CompoundFetchedResultsController'
+	pod 'MagicalRecord', :modular_headers => true
 	pod 'Reusable'
 end

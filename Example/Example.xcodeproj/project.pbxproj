@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		84978D07C4355C38FE527A71 /* libPods-Example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F5A0E556E83573FD186AFE3 /* libPods-Example.a */; };
 		DD86A0761E0DE1C200CD741B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD86A0681E0DE1C200CD741B /* AppDelegate.swift */; };
 		DD86A0791E0DE1C200CD741B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DD86A06D1E0DE1C200CD741B /* Localizable.strings */; };
 		DD86A07A1E0DE1C200CD741B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD86A06F1E0DE1C200CD741B /* Main.storyboard */; };
@@ -17,13 +18,12 @@
 		DDC09C5B1E1471EA005C6EE6 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC09C581E1471EA005C6EE6 /* Item.swift */; };
 		DDC09C5C1E1471EA005C6EE6 /* NSFetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC09C5A1E1471EA005C6EE6 /* NSFetchedResultsController.swift */; };
 		DDC09C5E1E147363005C6EE6 /* Static with Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC09C5D1E147363005C6EE6 /* Static with Item.swift */; };
-		DE37BA84D84414275EEBCA9C /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FE51CCC70443FC404419D89 /* Pods_Example.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1F5A0E556E83573FD186AFE3 /* libPods-Example.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Example.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F4EDAF2ED0A20F1ABEABB23 /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
 		5B7F84F69C750E542715956A /* Pods-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-Example/Pods-Example.release.xcconfig"; sourceTree = "<group>"; };
-		8FE51CCC70443FC404419D89 /* Pods_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D95E1C411D88E71A00F94976 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D95E1C891D88F39300F94976 /* AppwiseCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppwiseCore.framework; path = "../build/Debug-iphoneos/AppwiseCore.framework"; sourceTree = "<group>"; };
 		DD86A0681E0DE1C200CD741B /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -44,7 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DE37BA84D84414275EEBCA9C /* Pods_Example.framework in Frameworks */,
+				84978D07C4355C38FE527A71 /* libPods-Example.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,7 +82,7 @@
 			isa = PBXGroup;
 			children = (
 				D95E1C891D88F39300F94976 /* AppwiseCore.framework */,
-				8FE51CCC70443FC404419D89 /* Pods_Example.framework */,
+				1F5A0E556E83573FD186AFE3 /* libPods-Example.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -156,7 +156,6 @@
 				D95E1C3D1D88E71A00F94976 /* Sources */,
 				D95E1C3E1D88E71A00F94976 /* Frameworks */,
 				D95E1C3F1D88E71A00F94976 /* Resources */,
-				69BB4E2220FFDB8E6E8AD418 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -231,30 +230,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		69BB4E2220FFDB8E6E8AD418 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Example/Pods-Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/CompoundFetchedResultsController/CompoundFetchedResultsController.framework",
-				"${BUILT_PRODUCTS_DIR}/FetchedDataSource/FetchedDataSource.framework",
-				"${BUILT_PRODUCTS_DIR}/MagicalRecord/MagicalRecord.framework",
-				"${BUILT_PRODUCTS_DIR}/Reusable/Reusable.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CompoundFetchedResultsController.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FetchedDataSource.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MagicalRecord.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reusable.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Example/Pods-Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
