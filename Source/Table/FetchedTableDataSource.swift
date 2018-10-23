@@ -19,7 +19,7 @@ public final class FetchedTableDataSource<DelegateType: FetchedTableDataSourceDe
 			return observer.animations
 		}
 		set {
-			observer.animations = animations
+			observer.animations = newValue
 		}
 	}
 
@@ -29,7 +29,7 @@ public final class FetchedTableDataSource<DelegateType: FetchedTableDataSourceDe
 			return observer.animateChanges
 		}
 		set {
-			observer.animateChanges = animateChanges
+			observer.animateChanges = newValue
 		}
 	}
 

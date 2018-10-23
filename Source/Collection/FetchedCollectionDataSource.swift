@@ -20,7 +20,7 @@ public final class FetchedCollectionDataSource<DelegateType: FetchedCollectionDa
 			return observer.animateChanges
 		}
 		set {
-			observer.animateChanges = animateChanges
+			observer.animateChanges = newValue
 		}
 	}
 
