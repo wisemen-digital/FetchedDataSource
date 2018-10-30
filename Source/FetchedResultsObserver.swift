@@ -11,8 +11,8 @@ class FetchedResultsObserver<ResultType: NSFetchRequestResult>: NSObject, NSFetc
 	let controller: NSFetchedResultsController<ResultType>
 	weak var delegate: FetchedResultsObserverDelegate?
 	lazy var changes = FetchedChanges()
-	var isVisible = true
 	var animateChanges: Bool
+	private(set) var isVisible = true
 
 	private var monitor: LifecycleBehaviorViewController?
 
