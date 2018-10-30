@@ -42,6 +42,8 @@ public final class FetchedTableDataSource<DelegateType: FetchedTableDataSourceDe
 		super.init(controller: controller)
 
 		dataSource.finishSetup()
+
+		observer.animateChanges = animateChanges
 		observer.finishSetup()
 	}
 

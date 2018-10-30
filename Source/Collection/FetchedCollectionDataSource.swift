@@ -33,6 +33,8 @@ public final class FetchedCollectionDataSource<DelegateType: FetchedCollectionDa
 		super.init(controller: controller)
 
 		dataSource.finishSetup()
+
+		observer.animateChanges = animateChanges
 		observer.finishSetup()
 	}
 
