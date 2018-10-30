@@ -11,14 +11,15 @@ class FetchedResultsObserver<ResultType: NSFetchRequestResult>: NSObject, NSFetc
 	let controller: NSFetchedResultsController<ResultType>
 	weak var delegate: FetchedResultsObserverDelegate?
 	lazy var changes = FetchedChanges()
-	var animateChanges = true
 	var isVisible = true
+	var animateChanges: Bool
 
 	private var monitor: LifecycleBehaviorViewController?
 
-	init(controller: NSFetchedResultsController<ResultType>, delegate: FetchedResultsObserverDelegate) {
+	init(controller: NSFetchedResultsController<ResultType>, delegate: FetchedResultsObserverDelegate, animateChanges: Bool) {
 		self.controller = controller
 		self.delegate = delegate
+		self.animateChanges = animateChanges
 		super.init()
 	}
 

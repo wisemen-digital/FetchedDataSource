@@ -29,12 +29,10 @@ public final class FetchedCollectionDataSource<DelegateType: FetchedCollectionDa
 
 	public init(controller: NSFetchedResultsController<DelegateType.ResultType>, view: UICollectionView, delegate: DelegateType, animateChanges: Bool = true) {
 		dataSource = CollectionDataSource(controller: controller, view: view, delegate: delegate)
-		observer = CollectionFetchedResultsObserver(controller: controller, view: view, delegate: delegate)
+		observer = CollectionFetchedResultsObserver(controller: controller, view: view, delegate: delegate, animateChanges: animateChanges)
 		super.init(controller: controller)
 
 		dataSource.finishSetup()
-
-		observer.animateChanges = animateChanges
 		observer.finishSetup()
 	}
 
