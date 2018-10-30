@@ -12,9 +12,9 @@ final class TableFetchedResultsObserver<ResultType: NSFetchRequestResult>: Fetch
 	var animations: [NSFetchedResultsChangeType: UITableView.RowAnimation] = [:]
 	private weak var view: UITableView?
 
-	init(controller: NSFetchedResultsController<ResultType>, view: UITableView, delegate: FetchedResultsObserverDelegate) {
+	init(controller: NSFetchedResultsController<ResultType>, view: UITableView, delegate: FetchedResultsObserverDelegate, animateChanges: Bool) {
 		self.view = view
-		super.init(controller: controller, delegate: delegate)
+		super.init(controller: controller, delegate: delegate, animateChanges: animateChanges)
 	}
 
 	// MARK: - NSFetchedResultsControllerDelegate

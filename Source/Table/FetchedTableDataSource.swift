@@ -38,7 +38,7 @@ public final class FetchedTableDataSource<DelegateType: FetchedTableDataSourceDe
 
 	public init(controller: NSFetchedResultsController<DelegateType.ResultType>, view: UITableView, delegate: DelegateType, animateChanges: Bool = true) {
 		dataSource = TableDataSource(controller: controller, view: view, delegate: delegate)
-		observer = TableFetchedResultsObserver(controller: controller, view: view, delegate: delegate)
+		observer = TableFetchedResultsObserver(controller: controller, view: view, delegate: delegate, animateChanges: animateChanges)
 		super.init(controller: controller)
 
 		dataSource.finishSetup()

@@ -12,9 +12,9 @@ final class CollectionFetchedResultsObserver<ResultType: NSFetchRequestResult>: 
 	private var shouldReloadView = false
 	private weak var view: UICollectionView?
 
-	init(controller: NSFetchedResultsController<ResultType>, view: UICollectionView, delegate: FetchedResultsObserverDelegate) {
+	init(controller: NSFetchedResultsController<ResultType>, view: UICollectionView, delegate: FetchedResultsObserverDelegate, animateChanges: Bool) {
 		self.view = view
-		super.init(controller: controller, delegate: delegate)
+		super.init(controller: controller, delegate: delegate, animateChanges: animateChanges)
 	}
 
 	// MARK: - NSFetchedResultsControllerDelegate
