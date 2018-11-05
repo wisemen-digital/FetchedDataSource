@@ -20,6 +20,7 @@ final class CollectionDataSource<DelegateType: CollectionDataSourceDelegate>: Da
 	}
 
 	override func finishSetup() {
+		super.finishSetup()
 		view?.dataSource = self
 	}
 
