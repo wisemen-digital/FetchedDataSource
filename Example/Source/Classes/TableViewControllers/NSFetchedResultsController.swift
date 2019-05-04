@@ -31,7 +31,7 @@ extension NSFetchedResultsControllerTableViewController: FetchedTableDataSourceD
 }
 
 class NSFetchedResultsControllerCollectionViewController: UICollectionViewController {
-	var fetchedDataSource: FetchedCollectionDataSource<NSFetchedResultsControllerCollectionViewController>!
+	var fetchedDataSource: FetchedCollectionDataSource<Item>!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -41,10 +41,10 @@ class NSFetchedResultsControllerCollectionViewController: UICollectionViewContro
 }
 
 extension NSFetchedResultsControllerCollectionViewController: FetchedCollectionDataSourceDelegate {
-	func cell(for indexPath: IndexPath, data: Item, view: UICollectionView) -> UICollectionViewCell {
+	func cell(for indexPath: IndexPath, view: UICollectionView) -> UICollectionViewCell {
 		let cell = view.dequeueReusableCell(for: indexPath) as CollectionCell
 
-		cell.configure(item: data)
+		cell.configure(item: fetchedDataSource.object(at: indexPath))
 
 		return cell
 	}

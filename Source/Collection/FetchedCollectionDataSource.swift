@@ -12,7 +12,7 @@ import UIKit
 public protocol FetchedCollectionDataSourceDelegate: CollectionDataSourceDelegate & FetchedResultsObserverDelegate {
 }
 
-public final class FetchedCollectionDataSource<DelegateType: FetchedCollectionDataSourceDelegate>: __FetchedDataSource<DelegateType.ResultType, UICollectionViewCell> {
+public final class FetchedCollectionDataSource<ResultType: NSFetchRequestResult>: __FetchedDataSource<ResultType, UICollectionViewCell> {
 
 	/// toggle animations on or off. If set to false, will use `reloadData()` internally
 	public var animateChanges: Bool {
@@ -24,10 +24,10 @@ public final class FetchedCollectionDataSource<DelegateType: FetchedCollectionDa
 		}
 	}
 
-	private let dataSource: CollectionDataSource<DelegateType>
-	private let observer: CollectionFetchedResultsObserver<DelegateType.ResultType>
+	private let dataSource: CollectionDataSource<ResultType>
+	private let observer: CollectionFetchedResultsObserver<ResultType>
 
-	public init(controller: NSFetchedResultsController<DelegateType.ResultType>, view: UICollectionView, delegate: DelegateType, animateChanges: Bool = true) {
+	public init(controller: NSFetchedResultsController<ResultType>, view: UICollectionView, delegate: FetchedCollectionDataSourceDelegate, animateChanges: Bool = true) {
 		dataSource = CollectionDataSource(controller: controller, view: view, delegate: delegate)
 		observer = CollectionFetchedResultsObserver(controller: controller, view: view, delegate: delegate, animateChanges: animateChanges)
 		super.init(controller: controller)
@@ -36,7 +36,7 @@ public final class FetchedCollectionDataSource<DelegateType: FetchedCollectionDa
 		observer.finishSetup()
 	}
 
-	public override func object(for cell: UICollectionViewCell) -> DelegateType.ResultType? {
+	public override func object(for cell: UICollectionViewCell) -> ResultType? {
 		return dataSource.object(for: cell)
 	}
 }

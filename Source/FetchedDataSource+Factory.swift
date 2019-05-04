@@ -14,7 +14,7 @@ public enum FetchedDataSource {
 		return FetchedTableDataSource(controller: controller, view: tableView, delegate: delegate, animateChanges: animateChanges)
 	}
 
-	public static func `for`<T: FetchedCollectionDataSourceDelegate>(collectionView: UICollectionView, controller: NSFetchedResultsController<T.ResultType>, delegate: T, animateChanges: Bool = true) -> FetchedCollectionDataSource<T> {
+	public static func `for`<ResultType: NSFetchRequestResult>(collectionView: UICollectionView, controller: NSFetchedResultsController<ResultType>, delegate: FetchedCollectionDataSourceDelegate, animateChanges: Bool = true) -> FetchedCollectionDataSource<ResultType> {
 		return FetchedCollectionDataSource(controller: controller, view: collectionView, delegate: delegate, animateChanges: animateChanges)
 	}
 }

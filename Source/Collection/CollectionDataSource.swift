@@ -8,12 +8,12 @@
 import CoreData
 import UIKit
 
-final class CollectionDataSource<DelegateType: CollectionDataSourceDelegate>: DataSource<DelegateType.ResultType>, UICollectionViewDataSource {
+final class CollectionDataSource<ResultType: NSFetchRequestResult>: DataSource<ResultType>, UICollectionViewDataSource {
 
 	private weak var view: UICollectionView?
-	private weak var delegate: DelegateType?
+	private weak var delegate: CollectionDataSourceDelegate?
 
-	init(controller: NSFetchedResultsController<DelegateType.ResultType>, view: UICollectionView, delegate: DelegateType) {
+	init(controller: NSFetchedResultsController<ResultType>, view: UICollectionView, delegate: CollectionDataSourceDelegate) {
 		self.view = view
 		self.delegate = delegate
 		super.init(controller: controller)
@@ -24,7 +24,7 @@ final class CollectionDataSource<DelegateType: CollectionDataSourceDelegate>: Da
 		view?.dataSource = self
 	}
 
-	func object(for cell: UICollectionViewCell) -> DelegateType.ResultType? {
+	func object(for cell: UICollectionViewCell) -> ResultType? {
 		guard let path = view?.indexPath(for: cell) else { return nil }
 		return object(at: path)
 	}
@@ -42,10 +42,7 @@ final class CollectionDataSource<DelegateType: CollectionDataSourceDelegate>: Da
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		guard let delegate = delegate else { fatalError("Delegate cannot be nil") }
 
-		let data = object(at: indexPath)
-		let cell = delegate.cell(for: indexPath, data: data, view: collectionView)
-
-		return cell
+		return delegate.cell(for: indexPath, view: collectionView)
 	}
 
 	func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
