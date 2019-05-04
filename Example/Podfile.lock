@@ -1,14 +1,14 @@
 PODS:
-  - CompoundFetchedResultsController (2.0.0)
-  - FetchedDataSource (2.0.3)
+  - CompoundFetchedResultsController (2.1.0)
+  - FetchedDataSource (3.0.0)
   - MagicalRecord (2.3.2):
     - MagicalRecord/Core (= 2.3.2)
   - MagicalRecord/Core (2.3.2)
-  - Reusable (4.0.4):
-    - Reusable/Storyboard (= 4.0.4)
-    - Reusable/View (= 4.0.4)
-  - Reusable/Storyboard (4.0.4)
-  - Reusable/View (4.0.4)
+  - Reusable (4.0.5):
+    - Reusable/Storyboard (= 4.0.5)
+    - Reusable/View (= 4.0.5)
+  - Reusable/Storyboard (4.0.5)
+  - Reusable/View (4.0.5)
 
 DEPENDENCIES:
   - CompoundFetchedResultsController
@@ -27,11 +27,11 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  CompoundFetchedResultsController: c6187bfb2f95f78ac8e132ef699e415721f6d310
-  FetchedDataSource: cbc2cdc13a02891235a6ae1c12b90be32fa2df8d
+  CompoundFetchedResultsController: 3dbb8505536625b11e51e501e37fa12bdfa8e7f0
+  FetchedDataSource: d66889cd9b8330bfb3bb5bf26fb527f66c9447db
   MagicalRecord: 53bed74b4323b930992a725be713e53b37d19755
-  Reusable: 7fc772097df3e5fc86f59d8a7af9708e49b5ff55
+  Reusable: 188be1a54ac0691bc66e5bb24ec6eb91971b315b
 
 PODFILE CHECKSUM: 4896d52f7c43b1495b0b30030a5b787228f9620c
 
-COCOAPODS: 1.6.0.beta.2
+COCOAPODS: 1.6.1
