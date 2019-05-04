@@ -8,11 +8,11 @@
 import CoreData
 import UIKit
 
-final class TableDataSource<DelegateType: TableDataSourceDelegate>: DataSource<DelegateType.ResultType>, UITableViewDataSource {
+final class TableDataSource<ResultType: NSFetchRequestResult>: DataSource<ResultType>, UITableViewDataSource {
 	private weak var view: UITableView?
-	private weak var delegate: DelegateType?
+	private weak var delegate: TableDataSourceDelegate?
 
-	init(controller: NSFetchedResultsController<DelegateType.ResultType>, view: UITableView, delegate: DelegateType) {
+	init(controller: NSFetchedResultsController<ResultType>, view: UITableView, delegate: TableDataSourceDelegate) {
 		self.view = view
 		self.delegate = delegate
 		super.init(controller: controller)
@@ -23,7 +23,7 @@ final class TableDataSource<DelegateType: TableDataSourceDelegate>: DataSource<D
 		view?.dataSource = self
 	}
 
-	func object(for cell: UITableViewCell) -> DelegateType.ResultType? {
+	func object(for cell: UITableViewCell) -> ResultType? {
 		guard let path = view?.indexPath(for: cell) else { return nil }
 		return object(at: path)
 	}
@@ -42,10 +42,7 @@ final class TableDataSource<DelegateType: TableDataSourceDelegate>: DataSource<D
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		guard let delegate = delegate else { fatalError("Delegate cannot be nil") }
 
-		let data = object(at: indexPath)
-		let cell = delegate.cell(for: indexPath, data: data, view: tableView)
-
-		return cell
+		return delegate.cell(for: indexPath, view: tableView)
 	}
 
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

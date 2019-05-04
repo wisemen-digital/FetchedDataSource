@@ -10,7 +10,7 @@
 import UIKit
 
 public enum FetchedDataSource {
-	public static func `for`<T: FetchedTableDataSourceDelegate>(tableView: UITableView, controller: NSFetchedResultsController<T.ResultType>, delegate: T, animateChanges: Bool = true) -> FetchedTableDataSource<T> {
+	public static func `for`<ResultType: NSFetchRequestResult>(tableView: UITableView, controller: NSFetchedResultsController<ResultType>, delegate: FetchedTableDataSourceDelegate, animateChanges: Bool = true) -> FetchedTableDataSource<ResultType> {
 		return FetchedTableDataSource(controller: controller, view: tableView, delegate: delegate, animateChanges: animateChanges)
 	}
 

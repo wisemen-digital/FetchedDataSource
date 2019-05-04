@@ -12,7 +12,7 @@ import UIKit
 public protocol FetchedTableDataSourceDelegate: TableDataSourceDelegate & FetchedResultsObserverDelegate {
 }
 
-public final class FetchedTableDataSource<DelegateType: FetchedTableDataSourceDelegate>: __FetchedDataSource<DelegateType.ResultType, UITableViewCell> {
+public final class FetchedTableDataSource<ResultType: NSFetchRequestResult>: __FetchedDataSource<ResultType, UITableViewCell> {
 	/// Dictionary to configure the different animations to be applied by each change type.
 	public var animations: [NSFetchedResultsChangeType: UITableView.RowAnimation] {
 		get {
@@ -33,10 +33,10 @@ public final class FetchedTableDataSource<DelegateType: FetchedTableDataSourceDe
 		}
 	}
 
-	private let dataSource: TableDataSource<DelegateType>
-	private let observer: TableFetchedResultsObserver<DelegateType.ResultType>
+	private let dataSource: TableDataSource<ResultType>
+	private let observer: TableFetchedResultsObserver<ResultType>
 
-	public init(controller: NSFetchedResultsController<DelegateType.ResultType>, view: UITableView, delegate: DelegateType, animateChanges: Bool = true) {
+	public init(controller: NSFetchedResultsController<ResultType>, view: UITableView, delegate: FetchedTableDataSourceDelegate, animateChanges: Bool = true) {
 		dataSource = TableDataSource(controller: controller, view: view, delegate: delegate)
 		observer = TableFetchedResultsObserver(controller: controller, view: view, delegate: delegate, animateChanges: animateChanges)
 		super.init(controller: controller)
@@ -45,7 +45,7 @@ public final class FetchedTableDataSource<DelegateType: FetchedTableDataSourceDe
 		observer.finishSetup()
 	}
 
-	public override func object(for cell: UITableViewCell) -> DelegateType.ResultType? {
+	public override func object(for cell: UITableViewCell) -> ResultType? {
 		return dataSource.object(for: cell)
 	}
 }

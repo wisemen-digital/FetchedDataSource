@@ -9,15 +9,12 @@ import CoreData
 import UIKit
 
 public protocol TableDataSourceDelegate: AnyObject {
-	associatedtype ResultType: NSFetchRequestResult
-
 	/// Asks your delegate for the cell that corresponds to the specified item in the view.
 	///
 	/// - Parameter view: The view requesting this information.
 	/// - Parameter indexPath: The index path that specifies the location of the item.
-	/// - Parameter indexPath: The data object to configure the cell.
 	/// - Returns: A configured cell object.
-	func cell(for indexPath: IndexPath, data: ResultType, view: UITableView) -> UITableViewCell
+	func cell(for indexPath: IndexPath, view: UITableView) -> UITableViewCell
 
 	/// Asks your delegate whether the specified item can be moved to another location in the view.
 	/// Use this method to selectively allow or disallow the movement of items within the view.

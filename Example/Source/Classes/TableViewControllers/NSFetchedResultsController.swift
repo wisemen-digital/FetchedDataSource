@@ -11,7 +11,7 @@ import FetchedDataSource
 import Reusable
 
 class NSFetchedResultsControllerTableViewController: UITableViewController {
-	var fetchedDataSource: FetchedTableDataSource<NSFetchedResultsControllerTableViewController>!
+	var fetchedDataSource: FetchedTableDataSource<Item>!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -21,10 +21,10 @@ class NSFetchedResultsControllerTableViewController: UITableViewController {
 }
 
 extension NSFetchedResultsControllerTableViewController: FetchedTableDataSourceDelegate {
-	func cell(for indexPath: IndexPath, data: Item, view: UITableView) -> UITableViewCell {
+	func cell(for indexPath: IndexPath, view: UITableView) -> UITableViewCell {
 		let cell = view.dequeueReusableCell(for: indexPath) as TableCell
 
-		cell.configure(item: data)
+		cell.configure(item: fetchedDataSource.object(at: indexPath))
 
 		return cell
 	}
