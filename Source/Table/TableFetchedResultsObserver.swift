@@ -59,7 +59,7 @@ final class TableFetchedResultsObserver<ResultType: NSFetchRequestResult>: Fetch
 		case .update:
 			// avoid crash when updating non-visible rows:
 			// http://stackoverflow.com/questions/11432556/nsrangeexception-exception-in-nsfetchedresultschangeupdate-event-of-nsfetchedres
-			if let indexPath = indexPath, let _ = view?.indexPathsForVisibleRows?.index(of: indexPath) {
+			if let indexPath = indexPath, let _ = view?.indexPathsForVisibleRows?.firstIndex(of: indexPath) {
 				changes.addObjectChange(type: actualType, path: indexPath)
 			}
 		case .move:
@@ -67,6 +67,8 @@ final class TableFetchedResultsObserver<ResultType: NSFetchRequestResult>: Fetch
 				changes.addObjectMove(from: indexPath, to: newIndexPath)
 			}
 			break
+		@unknown default:
+			assertionFailure("Unknown object change type in FRC: \(actualType)")
 		}
 	}
 

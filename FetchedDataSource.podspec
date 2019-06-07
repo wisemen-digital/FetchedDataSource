@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
 
 	# configuration
 	s.platform		= :ios, '8.0'
-	s.swift_version = '4.2'
+	s.swift_version = '5.0'
 
 	# files
 	s.frameworks	= 'Foundation', 'CoreData', 'UIKit'

@@ -79,6 +79,8 @@ final class CollectionFetchedResultsObserver<ResultType: NSFetchRequestResult>: 
 				changes.addObjectMove(from: indexPath, to: newIndexPath)
 			}
 			break
+		@unknown default:
+			assertionFailure("Unknown object change type in FRC: \(actualType)")
 		}
 	}
 

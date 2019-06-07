@@ -37,6 +37,8 @@ struct FetchedChanges {
 			}
 		case .move:
 			break
+		@unknown default:
+			assertionFailure("Unknown object change type in FetchedChanges: \(type)")
 		}
 	}
 
@@ -63,6 +65,8 @@ struct FetchedChanges {
 			updatedSections.insert(index)
 		case .move:
 			break
+		@unknown default:
+			assertionFailure("Unknown object change type in FetchedChanges: \(type)")
 		}
 	}
 }
