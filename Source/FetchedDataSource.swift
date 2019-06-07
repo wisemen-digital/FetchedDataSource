@@ -25,7 +25,7 @@ public class __FetchedDataSource<ResultType: NSFetchRequestResult, CellType: UIV
 	public func index(for object: ResultType) -> IndexPath? {
 		return controller.indexPath(forObject: object)
 	}
-	
+
 	/// Check if the controller contains the given index path (section and row/item).
 	///
 	/// - Parameter indexPath: The index path to check.
@@ -46,7 +46,7 @@ public class __FetchedDataSource<ResultType: NSFetchRequestResult, CellType: UIV
 	/// - Parameter indexPath: The index path to fetch.
 	/// - Returns: The requested object (if within bounds).
 	public func object(at indexPath: IndexPath) -> ResultType {
-		guard contains(indexPath: indexPath) else { fatalError("The index path is out of bounds for the controller: \(indexPath)") }
+		precondition(contains(indexPath: indexPath), "The index path is out of bounds for the controller: \(indexPath)")
 		return controller.object(at: indexPath)
 	}
 

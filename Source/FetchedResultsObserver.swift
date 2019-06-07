@@ -35,7 +35,7 @@ class FetchedResultsObserver<ResultType: NSFetchRequestResult>: NSObject, NSFetc
 			vc.view.addSubview(monitor.view)
 			monitor.didMove(toParent: vc)
 		} else if let delegate = delegate {
-			fatalError("Delegate must be a UIViewController, instead got \(delegate)")
+			assertionFailure("Delegate must be a UIViewController, instead got \(delegate)")
 		} else {
 			// Delegate is nil, not sure if we should crash or not
 		}

@@ -20,7 +20,7 @@ class DataSource<ResultType: NSFetchRequestResult>: NSObject {
 		do {
 			try controller.performFetch()
 		} catch let error {
-			fatalError("Error performing controller fetch: \(error)")
+			assertionFailure("Error performing controller fetch: \(error)")
 		}
 	}
 
@@ -32,7 +32,7 @@ class DataSource<ResultType: NSFetchRequestResult>: NSObject {
 	}
 
 	func object(at indexPath: IndexPath) -> ResultType {
-		guard contains(indexPath: indexPath) else { fatalError("The index path is out of bounds for the controller: \(indexPath)") }
+		precondition(contains(indexPath: indexPath), "The index path is out of bounds for the controller: \(indexPath)")
 		return controller.object(at: indexPath)
 	}
 }
