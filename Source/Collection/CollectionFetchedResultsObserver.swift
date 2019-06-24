@@ -94,11 +94,10 @@ final class CollectionFetchedResultsObserver<ResultType: NSFetchRequestResult>: 
 		view?.collectionViewLayout.invalidateLayout()
 
 		if shouldAnimateChanges {
-			view?.performBatchUpdates({ [weak self] in
-				guard let changes = self?.changes else { return }
-				self?.apply(changes: changes)
-				}, completion: { [weak self] success in
-					self?.finishChanges(reload: !success, controller: controller)
+			view?.performBatchUpdates({
+				apply(changes: changes)
+			}, completion: { [weak self] success in
+				self?.finishChanges(reload: !success, controller: controller)
 			})
 		} else {
 			finishChanges(reload: true, controller: controller)

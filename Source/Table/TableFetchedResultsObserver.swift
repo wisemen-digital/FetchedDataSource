@@ -21,7 +21,8 @@ final class TableFetchedResultsObserver<ResultType: NSFetchRequestResult>: Fetch
 
 	override func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
 		super.controllerWillChangeContent(controller)
-		if shouldAnimateChanges {
+		if #available(iOS 11.0, *) {
+		} else if shouldAnimateChanges {
 			view?.beginUpdates()
 		}
 	}
@@ -78,19 +79,30 @@ final class TableFetchedResultsObserver<ResultType: NSFetchRequestResult>: Fetch
 	}
 
 	override func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-		FetchedDataSourceSwiftTryCatch.try({
-			if self.shouldAnimateChanges {
-				self.apply(changes: self.changes)
-				self.view?.endUpdates()
+		if #available(iOS 11.0, *) {
+			if shouldAnimateChanges {
+				view?.performBatchUpdates({
+					apply(changes: changes)
+				}, completion: { [weak self] success in
+					self?.finishChanges(reload: !success, controller: controller)
+				})
 			} else {
-				self.view?.reloadData()
+				finishChanges(reload: true, controller: controller)
 			}
-		}, catch: { [weak self] exception in
-			self?.view?.reloadData()
-			}, finally: {
-				super.controllerDidChangeContent(controller)
-				self.changes = FetchedChanges()
-		})
+		} else {
+			// Deprecated
+			FetchedDataSourceSwiftTryCatch.try({
+				if shouldAnimateChanges {
+					apply(changes: changes)
+					view?.endUpdates()
+					finishChanges(reload: false, controller: controller)
+				} else {
+					finishChanges(reload: true, controller: controller)
+				}
+			}, catch: { exception in
+				finishChanges(reload: true, controller: controller)
+			})
+		}
 	}
 
 	// MARK: - Helper methods
@@ -110,5 +122,14 @@ final class TableFetchedResultsObserver<ResultType: NSFetchRequestResult>: Fetch
 			view?.deleteRows(at: [move.from], with: animations[.delete] ?? .automatic)
 			view?.insertRows(at: [move.to], with: animations[.insert] ?? .automatic)
 		}
+	}
+
+	private func finishChanges(reload: Bool, controller: NSFetchedResultsController<NSFetchRequestResult>) {
+		if reload {
+			view?.reloadData()
+		}
+
+		super.controllerDidChangeContent(controller)
+		changes = FetchedChanges()
 	}
 }
