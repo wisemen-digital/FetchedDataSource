@@ -42,6 +42,15 @@ class FetchedResultsObserver<ResultType: NSFetchRequestResult>: NSObject, NSFetc
 		self.monitor = monitor
 	}
 
+	deinit {
+		// dealocate monitor if needed
+		if let monitor = monitor, monitor.parent != nil {
+			monitor.willMove(toParent: nil)
+			monitor.removeFromParent()
+			monitor.view.removeFromSuperview()
+		}
+	}
+
 	// MARK: - Empty NSFetchedResultsControllerDelegate methods
 	// Needed for correct method dispatch
 
