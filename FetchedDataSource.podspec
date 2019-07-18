@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 	# info
 	s.name			= 'FetchedDataSource'
-	s.version		= '3.1.2'
+	s.version		= '4.0.0'
 	s.summary		= 'Fetched results controller wrapper that allows joining multiple FRCs'
 	s.description	= 'This framework provides fetched results controller subclasses for static data and joining multiple FRCs together into one.'
 	s.homepage		= 'https://github.com/djbe/FetchedDataSource'
