@@ -21,10 +21,6 @@ final class TableFetchedResultsObserver<ResultType: NSFetchRequestResult>: Fetch
 
 	override func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
 		super.controllerWillChangeContent(controller)
-		if #available(iOS 11.0, *) {
-		} else if shouldAnimateChanges {
-			view?.beginUpdates()
-		}
 	}
 
 	override func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
@@ -79,30 +75,18 @@ final class TableFetchedResultsObserver<ResultType: NSFetchRequestResult>: Fetch
 	}
 
 	override func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-		if #available(iOS 11.0, *) {
+		FetchedDataSourceSwiftTryCatch.try({
 			if shouldAnimateChanges {
-				view?.performBatchUpdates({
-					apply(changes: changes)
-				}, completion: { [weak self] success in
-					self?.finishChanges(reload: !success, controller: controller)
-				})
+				view?.beginUpdates()
+				apply(changes: changes)
+				view?.endUpdates()
+				finishChanges(reload: false, controller: controller)
 			} else {
 				finishChanges(reload: true, controller: controller)
 			}
-		} else {
-			// Deprecated
-			FetchedDataSourceSwiftTryCatch.try({
-				if shouldAnimateChanges {
-					apply(changes: changes)
-					view?.endUpdates()
-					finishChanges(reload: false, controller: controller)
-				} else {
-					finishChanges(reload: true, controller: controller)
-				}
-			}, catch: { exception in
-				finishChanges(reload: true, controller: controller)
-			})
-		}
+		}, catch: { exception in
+			finishChanges(reload: true, controller: controller)
+		})
 	}
 
 	// MARK: - Helper methods
