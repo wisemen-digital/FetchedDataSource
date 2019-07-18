@@ -1,6 +1,6 @@
 PODS:
   - CompoundFetchedResultsController (2.1.0)
-  - FetchedDataSource (3.1.1)
+  - FetchedDataSource (3.1.2)
   - MagicalRecord (2.3.2):
     - MagicalRecord/Core (= 2.3.2)
   - MagicalRecord/Core (2.3.2)
@@ -28,10 +28,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   CompoundFetchedResultsController: 3dbb8505536625b11e51e501e37fa12bdfa8e7f0
-  FetchedDataSource: 1dd9909d2823d4965bddce0472b6d48b59e906cf
+  FetchedDataSource: a3698b5905318e7dfe0cde3906ee202bb2eba689
   MagicalRecord: 53bed74b4323b930992a725be713e53b37d19755
   Reusable: 82be188f29d96dc5eff0db7b2393bcc08d2cdd5b
 
 PODFILE CHECKSUM: 4896d52f7c43b1495b0b30030a5b787228f9620c
 
-COCOAPODS: 1.7.3
+COCOAPODS: 1.7.4
