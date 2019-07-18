@@ -45,8 +45,19 @@ public class __FetchedDataSource<ResultType: NSFetchRequestResult, CellType: UIV
 	///
 	/// - Parameter indexPath: The index path to fetch.
 	/// - Returns: The requested object (if within bounds).
+	@available(*, unavailable, renamed: "object(at:)", message: "This method has been updated to return an optional for safety (avoid crashes)")
 	public func object(at indexPath: IndexPath) -> ResultType {
 		precondition(contains(indexPath: indexPath), "The index path is out of bounds for the controller: \(indexPath)")
+		return controller.object(at: indexPath)
+	}
+
+	/// Try to get the object at the given index path.
+	/// Note: this function will fatalError if the path is out of bounds.
+	///
+	/// - Parameter indexPath: The index path to fetch.
+	/// - Returns: The requested object (if within bounds, nil otherwise).
+	public func object(at indexPath: IndexPath) -> ResultType? {
+		guard contains(indexPath: indexPath) else { return nil }
 		return controller.object(at: indexPath)
 	}
 
