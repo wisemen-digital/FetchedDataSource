@@ -8,69 +8,31 @@
 import CoreData
 import UIKit
 
-public protocol TableDataSourceDelegate: AnyObject {
-	/// Asks your delegate for the cell that corresponds to the specified item in the view.
-	///
-	/// - Parameter view: The view requesting this information.
-	/// - Parameter indexPath: The index path that specifies the location of the item.
-	/// - Returns: A configured cell object.
+@objc public protocol TableDataSourceDelegate: AnyObject {
+	@available(*, unavailable, renamed: "tableView(_:cellForRowAt:)")
 	func cell(for indexPath: IndexPath, view: UITableView) -> UITableViewCell
 
-	/// Asks your delegate whether the specified item can be moved to another location in the view.
-	/// Use this method to selectively allow or disallow the movement of items within the view.
-	///
-	/// **Note**: If you do not implement this method, the default implementation will return `false`.
-	///
-	/// - Parameter view: The view requesting this information.
-	/// - Parameter indexPath: The index path of the item that the view is trying to move.
-	/// - Returns: `true` if the item is allowed to move or `false` if it is not.
+	@available(*, unavailable, renamed: "tableView(_:canMoveRowAt:)")
 	func canMoveItem(at indexPath: IndexPath, view: UITableView) -> Bool
 
-	/// Tells your delegate to move the specified item to its new location.
-	///
-	/// - Parameter view: The view notifying you of the move.
-	/// - Parameter sourceIndexPath: The item’s original index path.
-	/// - Parameter destinationIndexPath: The new index path of the item.
+	@available(*, unavailable, renamed: "tableView(_:moveRowAt:to:)")
 	func moveItem(at sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath, view: UITableView)
 
+	@available(*, unavailable, renamed: "tableView(_:titleForHeaderInSection:)")
 	func titleForHeader(in section: Int, view: UITableView, default: String?) -> String?
+
+	@available(*, unavailable, renamed: "tableView(_:titleForFooterInSection:)")
 	func titleForFooter(in section: Int, view: UITableView) -> String?
 
+	@available(*, unavailable, renamed: "tableView(_:canEditRowAt:)")
 	func canEditRow(at indexPath: IndexPath, view: UITableView) -> Bool
+
+	@available(*, unavailable, renamed: "tableView(_:commit:forRowAt:)")
 	func commit(edit: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath, view: UITableView)
 
+	@available(*, unavailable, renamed: "sectionIndexTitles(for:)")
 	func sectionIndexTitles(forView view: UITableView) -> [String]?
+
+	@available(*, unavailable, renamed: "tableView(_:sectionForSectionIndexTitle:at:)")
 	func section(forSectionIndexTitle title: String, at index: Int, view: UITableView) -> Int
-}
-
-public extension TableDataSourceDelegate {
-	func canMoveItem(at indexPath: IndexPath, view: UITableView) -> Bool {
-		return false
-	}
-
-	func moveItem(at sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath, view: UITableView) {
-	}
-
-	func titleForHeader(in section: Int, view: UITableView, default: String?) -> String? {
-		return `default`
-	}
-
-	func titleForFooter(in section: Int, view: UITableView) -> String? {
-		return nil
-	}
-
-	func canEditRow(at indexPath: IndexPath, view: UITableView) -> Bool {
-		return false
-	}
-
-	func commit(edit: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath, view: UITableView) {
-	}
-
-	func sectionIndexTitles(forView view: UITableView) -> [String]? {
-		return nil
-	}
-
-	func section(forSectionIndexTitle title: String, at index: Int, view: UITableView) -> Int {
-		return index
-	}
 }

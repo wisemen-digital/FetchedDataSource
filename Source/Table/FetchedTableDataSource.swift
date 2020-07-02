@@ -9,7 +9,7 @@
 import CoreData
 import UIKit
 
-public protocol FetchedTableDataSourceDelegate: TableDataSourceDelegate & FetchedResultsObserverDelegate {
+public protocol FetchedTableDataSourceDelegate: UITableViewDataSource & FetchedResultsObserverDelegate & TableDataSourceDelegate {
 }
 
 public final class FetchedTableDataSource<ResultType: NSFetchRequestResult>: __FetchedDataSource<ResultType, UITableViewCell> {

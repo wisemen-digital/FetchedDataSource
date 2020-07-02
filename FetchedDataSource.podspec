@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
 	s.author		= { 'David Jennes' => 'david.jennes@gmail.com' }
 
 	# configuration
-	s.platform		= :ios, '8.0'
+	s.platform		= :ios, '9.0'
 	s.swift_version = '5.0'
 
 	# files

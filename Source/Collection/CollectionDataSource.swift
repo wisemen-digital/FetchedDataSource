@@ -11,9 +11,9 @@ import UIKit
 final class CollectionDataSource<ResultType: NSFetchRequestResult>: DataSource<ResultType>, UICollectionViewDataSource {
 
 	private weak var view: UICollectionView?
-	private weak var delegate: CollectionDataSourceDelegate?
+	private weak var delegate: UICollectionViewDataSource?
 
-	init(controller: NSFetchedResultsController<ResultType>, view: UICollectionView, delegate: CollectionDataSourceDelegate) {
+	init(controller: NSFetchedResultsController<ResultType>, view: UICollectionView, delegate: UICollectionViewDataSource) {
 		self.view = view
 		self.delegate = delegate
 		super.init(controller: controller)
@@ -42,20 +42,28 @@ final class CollectionDataSource<ResultType: NSFetchRequestResult>: DataSource<R
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		guard let delegate = delegate else { fatalError("Delegate cannot be nil") }
 
-		return delegate.cell(for: indexPath, view: collectionView)
+		return delegate.collectionView(collectionView, cellForItemAt: indexPath)
 	}
 
 	func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
 		guard let delegate = delegate else { fatalError("Delegate cannot be nil") }
 
-		return delegate.view(of: kind, at: indexPath, view: collectionView) ?? UICollectionReusableView()
+		return delegate.collectionView?(collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath) ?? UICollectionReusableView()
 	}
 
 	func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
-		return delegate?.canMoveItem(at: indexPath, view: collectionView) ?? false
+		return delegate?.collectionView?(collectionView, canMoveItemAt: indexPath) ?? false
 	}
 
 	func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-		delegate?.moveItem(at: sourceIndexPath, to: destinationIndexPath, view: collectionView)
+		delegate?.collectionView?(collectionView, moveItemAt: sourceIndexPath, to: destinationIndexPath)
+	}
+
+	func indexTitles(for collectionView: UICollectionView) -> [String]? {
+		return delegate?.indexTitles?(for: collectionView)
+	}
+
+	func collectionView(_ collectionView: UICollectionView, indexPathForIndexTitle title: String, at index: Int) -> IndexPath {
+		delegate?.collectionView?(collectionView, indexPathForIndexTitle: title, at: index) ?? IndexPath()
 	}
 }

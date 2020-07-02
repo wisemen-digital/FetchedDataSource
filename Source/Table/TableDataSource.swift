@@ -10,9 +10,9 @@ import UIKit
 
 final class TableDataSource<ResultType: NSFetchRequestResult>: DataSource<ResultType>, UITableViewDataSource {
 	private weak var view: UITableView?
-	private weak var delegate: TableDataSourceDelegate?
+	private weak var delegate: UITableViewDataSource?
 
-	init(controller: NSFetchedResultsController<ResultType>, view: UITableView, delegate: TableDataSourceDelegate) {
+	init(controller: NSFetchedResultsController<ResultType>, view: UITableView, delegate: UITableViewDataSource) {
 		self.view = view
 		self.delegate = delegate
 		super.init(controller: controller)
@@ -42,38 +42,38 @@ final class TableDataSource<ResultType: NSFetchRequestResult>: DataSource<Result
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		guard let delegate = delegate else { fatalError("Delegate cannot be nil") }
 
-		return delegate.cell(for: indexPath, view: tableView)
+		return delegate.tableView(tableView, cellForRowAt: indexPath)
 	}
 
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		return delegate?.titleForHeader(in: section, view: tableView, default: controller.sections?[section].name)
+		return delegate?.tableView?(tableView, titleForHeaderInSection: section)
 	}
 
 	func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-		return delegate?.titleForFooter(in: section, view: tableView)
+		return delegate?.tableView?(tableView, titleForFooterInSection: section)
 	}
 
 	func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-		return delegate?.sectionIndexTitles(forView: tableView)
+		return delegate?.sectionIndexTitles?(for: tableView)
 	}
 
 	func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
-		return delegate?.section(forSectionIndexTitle: title, at: index, view: tableView) ?? index
+		return delegate?.tableView?(tableView, sectionForSectionIndexTitle: title, at: index) ?? index
 	}
 
 	func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-		return delegate?.canEditRow(at: indexPath, view: tableView) ?? false
+		return delegate?.tableView?(tableView, canEditRowAt: indexPath) ?? false
 	}
 
 	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-		delegate?.commit(edit: editingStyle, forRowAt: indexPath, view: tableView)
+		delegate?.tableView?(tableView, commit: editingStyle, forRowAt: indexPath)
 	}
 
 	func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-		return delegate?.canMoveItem(at: indexPath, view: tableView) ?? false
+		return delegate?.tableView?(tableView, canMoveRowAt: indexPath) ?? false
 	}
 
 	func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-		delegate?.moveItem(at: sourceIndexPath, to: destinationIndexPath, view: tableView)
+		delegate?.tableView?(tableView, moveRowAt: sourceIndexPath, to: destinationIndexPath)
 	}
 }

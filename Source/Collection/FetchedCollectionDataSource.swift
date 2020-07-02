@@ -9,7 +9,7 @@
 import CoreData
 import UIKit
 
-public protocol FetchedCollectionDataSourceDelegate: CollectionDataSourceDelegate & FetchedResultsObserverDelegate {
+public protocol FetchedCollectionDataSourceDelegate: UICollectionViewDataSource & FetchedResultsObserverDelegate & CollectionDataSourceDelegate {
 }
 
 public final class FetchedCollectionDataSource<ResultType: NSFetchRequestResult>: __FetchedDataSource<ResultType, UICollectionViewCell> {
