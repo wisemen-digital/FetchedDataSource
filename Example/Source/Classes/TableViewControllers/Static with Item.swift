@@ -16,15 +16,17 @@ class StaticWithItemTableViewController: UITableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		fetchedDataSource = FetchedDataSource.for(tableView: tableView, controller: Item.staticfrc, delegate: self)
+		fetchedDataSource = FetchedTableDataSource(controller: Item.staticfrc, view: tableView, delegate: self)
 	}
 }
 
 extension StaticWithItemTableViewController: FetchedTableDataSourceDelegate {
-	func cell(for indexPath: IndexPath, view: UITableView) -> UITableViewCell {
-		let cell = view.dequeueReusableCell(for: indexPath) as TableCell
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(for: indexPath) as TableCell
 
-		cell.configure(item: fetchedDataSource.object(at: indexPath))
+		if let item = fetchedDataSource.object(at: indexPath) {
+			cell.configure(item: item)
+		}
 
 		return cell
 	}

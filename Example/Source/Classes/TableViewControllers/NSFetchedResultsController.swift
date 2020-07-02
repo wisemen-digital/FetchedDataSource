@@ -16,15 +16,17 @@ class NSFetchedResultsControllerTableViewController: UITableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		fetchedDataSource = FetchedDataSource.for(tableView: tableView, controller: Item.nsfrc, delegate: self)
+		fetchedDataSource = FetchedTableDataSource(controller: Item.nsfrc, view: tableView, delegate: self)
 	}
 }
 
 extension NSFetchedResultsControllerTableViewController: FetchedTableDataSourceDelegate {
-	func cell(for indexPath: IndexPath, view: UITableView) -> UITableViewCell {
-		let cell = view.dequeueReusableCell(for: indexPath) as TableCell
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(for: indexPath) as TableCell
 
-		cell.configure(item: fetchedDataSource.object(at: indexPath))
+		if let item = fetchedDataSource.object(at: indexPath) {
+			cell.configure(item: item)
+		}
 
 		return cell
 	}
@@ -36,21 +38,23 @@ class NSFetchedResultsControllerCollectionViewController: UICollectionViewContro
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		fetchedDataSource = FetchedDataSource.for(collectionView: collectionView!, controller: Item.nsfrc, delegate: self)
+		fetchedDataSource = FetchedCollectionDataSource(controller: Item.nsfrc, view: collectionView, delegate: self)
 	}
 }
 
 extension NSFetchedResultsControllerCollectionViewController: FetchedCollectionDataSourceDelegate {
-	func cell(for indexPath: IndexPath, view: UICollectionView) -> UICollectionViewCell {
-		let cell = view.dequeueReusableCell(for: indexPath) as CollectionCell
+	override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		let cell = collectionView.dequeueReusableCell(for: indexPath) as CollectionCell
 
-		cell.configure(item: fetchedDataSource.object(at: indexPath))
+		if let item = fetchedDataSource.object(at: indexPath) {
+			cell.configure(item: item)
+		}
 
 		return cell
 	}
 
-	func view(of kind: String, at indexPath: IndexPath, view: UICollectionView) -> UICollectionReusableView? {
-		let view: TitleHeader = view.dequeueReusableSupplementaryView(ofKind: kind, for: indexPath)
+	override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+		let view: TitleHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, for: indexPath)
 
 		if let section = fetchedDataSource.controller.sections?[indexPath.section] {
 			view.titleLabel.text = section.name
