@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 	# info
 	s.name			= 'FetchedDataSource'
-	s.version		= '5.0.0'
+	s.version		= '5.0.1'
 	s.summary		= 'Fetched results controller wrapper that allows joining multiple FRCs'
 	s.description	= 'This framework provides fetched results controller subclasses for static data and joining multiple FRCs together into one.'
 	s.homepage		= 'https://github.com/djbe/FetchedDataSource'
@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
 	# files
 	s.frameworks	= 'Foundation', 'CoreData', 'UIKit'
 	s.source		= {
-		:git => 'https://github.com/djbe/FetchedDataSource.git',
+		:git => 'https://github.com/appwise-labs/FetchedDataSource.git',
 		:tag => "#{s.version}"
 	}
 	s.source_files	= 'Source/**/*.{swift,h,m}'

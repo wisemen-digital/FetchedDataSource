@@ -59,10 +59,12 @@ final class CollectionDataSource<ResultType: NSFetchRequestResult>: DataSource<R
 		delegate?.collectionView?(collectionView, moveItemAt: sourceIndexPath, to: destinationIndexPath)
 	}
 
+	@available(iOS 14.0, *)
 	func indexTitles(for collectionView: UICollectionView) -> [String]? {
 		return delegate?.indexTitles?(for: collectionView)
 	}
 
+	@available(iOS 14.0, *)
 	func collectionView(_ collectionView: UICollectionView, indexPathForIndexTitle title: String, at index: Int) -> IndexPath {
 		delegate?.collectionView?(collectionView, indexPathForIndexTitle: title, at: index) ?? IndexPath()
 	}
