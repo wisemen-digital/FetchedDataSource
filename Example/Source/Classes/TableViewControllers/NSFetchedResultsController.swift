@@ -16,7 +16,7 @@ class NSFetchedResultsControllerTableViewController: UITableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		fetchedDataSource = FetchedTableDataSource(controller: Item.nsfrc, view: tableView, delegate: self)
+		fetchedDataSource = FetchedTableDataSource(controller: Item.groupedfrc, view: tableView, delegate: self)
 	}
 }
 
@@ -38,7 +38,7 @@ class NSFetchedResultsControllerCollectionViewController: UICollectionViewContro
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		fetchedDataSource = FetchedCollectionDataSource(controller: Item.nsfrc, view: collectionView, delegate: self)
+		fetchedDataSource = FetchedCollectionDataSource(controller: Item.groupedfrc, view: collectionView, delegate: self)
 	}
 }
 

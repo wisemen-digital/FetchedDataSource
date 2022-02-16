@@ -1,0 +1,15 @@
+sourceryCommand: null
+sourceryTemplate: null
+ExampleTests:
+  sources:
+    include:
+    - ./../Source
+  output: ./ExampleTests/Mocks/Mock.generated.swift
+  targets:
+  - ExampleTests
+  testable:
+  - FetchedDataSource
+  import:
+  - CompoundFetchedResultsController
+  - CoreData
+  - Foundation

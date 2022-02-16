@@ -44,6 +44,35 @@ class StartViewController: UITableViewController {
 
 				NSLog("Updated fetched items: \(delete) deletes, \(update) updates and \(create) creates")
 			})
+
+			MagicalRecord.save({ moc in
+				var items = OtherItem.mr_findAll(in: moc) as! [OtherItem]
+
+				// delete random # of items
+				let delete = arc4random_uniform(UInt32(items.count))
+				for _ in 0..<delete {
+					let item = Int(arc4random_uniform(UInt32(items.count)))
+					items[item].mr_deleteEntity(in: moc)
+					items.remove(at: item)
+				}
+
+				// update random # of items
+				let update = arc4random_uniform(UInt32(items.count))
+				for _ in 0..<update {
+					let item = Int(arc4random_uniform(UInt32(items.count)))
+					items[item].name = "Other: \(UUID().uuidString)"
+				}
+
+				// create random new items
+				let create = arc4random_uniform(10)
+				for _ in 0..<create {
+					let item = OtherItem.mr_createEntity(in: moc)
+					item?.name = "Other: \(UUID().uuidString)"
+					item?.section = String(arc4random_uniform(3))
+				}
+
+				NSLog("Updated fetched items: \(delete) deletes, \(update) updates and \(create) creates")
+			})
 		}
 	}
 
@@ -51,5 +80,15 @@ class StartViewController: UITableViewController {
 		super.viewWillAppear(animated)
 
 		fetchedDataTimer?.invalidate()
+	}
+
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		super.prepare(for: segue, sender: sender)
+
+		if #available(iOS 14, *) {
+			// all good
+		} else if let identifier = segue.identifier, identifier.hasPrefix("compositional") {
+			fatalError("Compositional is not supported < iOS 14")
+		}
 	}
 }

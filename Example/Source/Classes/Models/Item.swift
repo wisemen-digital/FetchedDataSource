@@ -10,7 +10,15 @@ import CompoundFetchedResultsController
 import MagicalRecord
 
 extension Item {
-	static var nsfrc: NSFetchedResultsController<Item> {
+	static var allfrc: NSFetchedResultsController<Item> {
+		return Item.mr_fetchAllGrouped(by: nil,
+									   with: nil,
+									   sortedBy: "\(#keyPath(Item.section)),\(#keyPath(Item.name))",
+									   ascending: true,
+									   in: .mr_default()) as! NSFetchedResultsController<Item>
+	}
+
+	static var groupedfrc: NSFetchedResultsController<Item> {
 		return Item.mr_fetchAllGrouped(by: #keyPath(Item.section),
 		                               with: nil,
 		                               sortedBy: "\(#keyPath(Item.section)),\(#keyPath(Item.name))",

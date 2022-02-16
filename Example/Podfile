@@ -1,9 +1,18 @@
 platform :ios, '9.0'
 
-target 'Example' do
+def common_pods
 	pod 'FetchedDataSource', :path => '../'
 
 	pod 'CompoundFetchedResultsController'
 	pod 'MagicalRecord', :modular_headers => true
 	pod 'Reusable'
+end
+
+target 'Example' do
+	common_pods
+end
+
+target 'ExampleTests' do
+	common_pods
+	pod 'SwiftyMocky'
 end

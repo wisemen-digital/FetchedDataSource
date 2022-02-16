@@ -1,6 +1,6 @@
 PODS:
   - CompoundFetchedResultsController (2.1.0)
-  - FetchedDataSource (5.0.0)
+  - FetchedDataSource (5.0.1)
   - MagicalRecord (2.3.2):
     - MagicalRecord/Core (= 2.3.2)
   - MagicalRecord/Core (2.3.2)
@@ -9,18 +9,24 @@ PODS:
     - Reusable/View (= 4.1.1)
   - Reusable/Storyboard (4.1.1)
   - Reusable/View (4.1.1)
+  - Sourcery (1.6.0)
+  - SwiftyMocky (4.1.0):
+    - Sourcery (= 1.6.0)
 
 DEPENDENCIES:
   - CompoundFetchedResultsController
   - FetchedDataSource (from `../`)
   - MagicalRecord
   - Reusable
+  - SwiftyMocky
 
 SPEC REPOS:
   trunk:
     - CompoundFetchedResultsController
     - MagicalRecord
     - Reusable
+    - Sourcery
+    - SwiftyMocky
 
 EXTERNAL SOURCES:
   FetchedDataSource:
@@ -28,10 +34,12 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   CompoundFetchedResultsController: 3dbb8505536625b11e51e501e37fa12bdfa8e7f0
-  FetchedDataSource: 43373df7927f9e38488f0278329e2bcf031a8c2e
+  FetchedDataSource: 2d3c18a639d7cd840f912942bf45a6b9d25b1250
   MagicalRecord: 53bed74b4323b930992a725be713e53b37d19755
   Reusable: 53a9acf5c536f229b31b5865782414b508252ddb
+  Sourcery: 744f43178637c79bf23127dfe34e2103b3f28499
+  SwiftyMocky: 014739247afadb65efb5bb92ede32c22b9365762
 
-PODFILE CHECKSUM: 700f62fdfb6c5af07168a6b781c68ed4b889da0d
+PODFILE CHECKSUM: 29d31d811ddd7120c85a771508a5e5292cea79bb
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.11.2
