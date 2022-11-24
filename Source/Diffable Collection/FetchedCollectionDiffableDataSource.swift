@@ -14,8 +14,11 @@ public typealias FetchedDiffableDataSource = UICollectionViewDiffableDataSource<
 @available(iOS 13.0, *)
 public final class FetchedCollectionDiffableDataSource: NSObject, NSFetchedResultsControllerDelegate {
 	// MARK: - Properties
+	/// A boolean indicating whether updated items should be reconfigured or reloaded. Setting this value to `true` will reconfigure items, setting this value to `false` will reload items. The default value is `true`.
+	public var isReconfiguringItems: Bool = true
 	/// A boolean indicating whether differences should be animated. The default value is `true`.
 	public var isAnimatingDifferences: Bool = true
+	/// A boolean indicating whether snapshot updates should be applied immediately. Changes occuring to the snapshot will remain pending until the next time this value is set to `true`. The default value is `true`.
 	public var isUpdatingAutomatically: Bool = true {
 		didSet {
 			guard isUpdatingAutomatically else { return }
@@ -80,7 +83,11 @@ public final class FetchedCollectionDiffableDataSource: NSObject, NSFetchedResul
 
 		var itemsAfterChange = externalSnapshot.itemIdentifiers
 		var itemsToReconfigure = Array(Set(itemsBeforeChange).intersection(Set(itemsAfterChange)))
-		externalSnapshot.reloadItems(itemsToReconfigure) // using `reconfigureItems(_:)` does not trigger a cell resize
+		if #available(iOS 15.0, *), isReconfiguringItems {
+			externalSnapshot.reconfigureItems(itemsToReconfigure)
+		} else {
+			externalSnapshot.reloadItems(itemsToReconfigure)
+		}
 
 		if isUpdatingAutomatically {
 			applySnapshot(snapshot: externalSnapshot)
