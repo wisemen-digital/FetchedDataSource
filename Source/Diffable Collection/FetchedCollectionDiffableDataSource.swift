@@ -14,6 +14,8 @@ public typealias FetchedDiffableDataSource = UICollectionViewDiffableDataSource<
 @available(iOS 13.0, *)
 public final class FetchedCollectionDiffableDataSource: NSObject, NSFetchedResultsControllerDelegate {
 	// MARK: - Properties
+	/// A boolean indicating whether empty sections should be hidden or not. The default value is `false`.
+	public var isHidingEmptySections: Bool = false
 	/// A boolean indicating whether updated items should be reconfigured or reloaded. Setting this value to `true` will reconfigure items, setting this value to `false` will reload items. The default value is `true`.
 	public var isReconfiguringItems: Bool = true
 	/// A boolean indicating whether differences should be animated. The default value is `true`.
@@ -68,14 +70,16 @@ public final class FetchedCollectionDiffableDataSource: NSObject, NSFetchedResul
 	public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
 		var itemsBeforeChange = internalSnapshot.itemIdentifiers
 
+		internalSnapshot.deleteSections(internalSnapshot.sectionIdentifiers)
 		let snapshotWithPermanentIDs = obtainPermanentIDs(for: snapshot, in: controller.managedObjectContext)
 		let typedSnapshot = snapshotWithPermanentIDs as NSDiffableDataSourceSnapshot<String, NSManagedObject>
 		typedSnapshot.sectionIdentifiers.forEach { sectionIdentifier in
 			let section: FetchedDiffableSection = .init(identifier: sectionIdentifier)
-			internalSnapshot.deleteSections([section])
 			let items: [FetchedDiffableItem] = typedSnapshot.itemIdentifiers(inSection: sectionIdentifier).map { .init(item: $0) }
-			internalSnapshot.appendSections([section])
-			internalSnapshot.appendItems(items, toSection: section)
+			if (isHidingEmptySections && !items.isEmpty) || !isHidingEmptySections {
+				internalSnapshot.appendSections([section])
+				internalSnapshot.appendItems(items, toSection: section)
+			}
 		}
 
 		var externalSnapshot = internalSnapshot // modifiable snapshot to be displayed
