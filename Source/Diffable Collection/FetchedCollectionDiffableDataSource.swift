@@ -37,10 +37,11 @@ public final class FetchedCollectionDiffableDataSource: NSObject, NSFetchedResul
 	// MARK: - Lifecycle
 
 	/// Creates a diffable data source based on a `NSFetchedResultsController` instance.
-	public init(controller: NSFetchedResultsController<NSFetchRequestResult>, dataSource: FetchedDiffableDataSource, delegate: FetchedCollectionDiffableDataSourceDelegate) {
+	public init(controller: NSFetchedResultsController<NSFetchRequestResult>, dataSource: FetchedDiffableDataSource, delegate: FetchedCollectionDiffableDataSourceDelegate, isUpdatingAutomatically: Bool = true) {
 		self.controller = controller
 		self.dataSource = dataSource
 		self.delegate = delegate
+		self.isUpdatingAutomatically = isUpdatingAutomatically
 		super.init()
 		commonInit()
 	}
