@@ -71,9 +71,8 @@ public final class FetchedCollectionDiffableDataSource: NSObject, NSFetchedResul
 	public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
 		var itemsBeforeChange = internalSnapshot.itemIdentifiers
 
-		internalSnapshot.deleteSections(internalSnapshot.sectionIdentifiers)
-		let snapshotWithPermanentIDs = obtainPermanentIDs(for: snapshot, in: controller.managedObjectContext)
-		let typedSnapshot = snapshotWithPermanentIDs as NSDiffableDataSourceSnapshot<String, NSManagedObject>
+		let typedSnapshot = transform(snapshot: snapshot, context: controller.managedObjectContext)
+		internalSnapshot.deleteSections(typedSnapshot.sectionIdentifiers.map { .init(identifier: $0) })
 		typedSnapshot.sectionIdentifiers.forEach { sectionIdentifier in
 			let section: FetchedDiffableSection = .init(identifier: sectionIdentifier)
 			let items: [FetchedDiffableItem] = typedSnapshot.itemIdentifiers(inSection: sectionIdentifier).map { .init(item: $0) }
@@ -102,19 +101,30 @@ public final class FetchedCollectionDiffableDataSource: NSObject, NSFetchedResul
 	}
 
 	// MARK: - Helpers
-	/// The snapshot returned by the `NSFetchedResultsController` instance contains temporary `NSManagedObjectID`s.
+
+	private func transform(snapshot: NSDiffableDataSourceSnapshotReference, context: NSManagedObjectContext) -> NSDiffableDataSourceSnapshot<String, NSObject> {
+		obtainPermanentIDs(for: snapshot as NSDiffableDataSourceSnapshot<String, NSObject>, context: context)
+	}
+
+	/// The napshot returned by the `NSFetchedResultsController` instance contains temporary `NSManagedObjectID`s.
 	/// Working with temporary identifiers can lead to issues since at some point in time they will no longer exist.
-	private func obtainPermanentIDs(for snapshot: NSDiffableDataSourceSnapshotReference, in context: NSManagedObjectContext) -> NSDiffableDataSourceSnapshotReference {
-		let typedSnapshot = snapshot as NSDiffableDataSourceSnapshot<String, NSManagedObjectID>
-		let snapshotWithPermanentIDs: NSDiffableDataSourceSnapshotReference = .init()
-		typedSnapshot.sectionIdentifiers.forEach { sectionIdentifier in
-			do {
-				let objects = typedSnapshot.itemIdentifiers(inSection: sectionIdentifier).map { context.object(with: $0) }
-				try context.obtainPermanentIDs(for: objects)
-				snapshotWithPermanentIDs.appendSections(withIdentifiers: [sectionIdentifier])
-				snapshotWithPermanentIDs.appendItems(withIdentifiers: objects, intoSectionWithIdentifier: sectionIdentifier)
-			} catch {
-				snapshotWithPermanentIDs.appendSections(withIdentifiers: [sectionIdentifier])
+	private func obtainPermanentIDs(for snapshot: NSDiffableDataSourceSnapshot<String, NSObject>, context: NSManagedObjectContext) -> NSDiffableDataSourceSnapshot<String, NSObject> {
+		guard snapshot.itemIdentifiers.contains(where: { $0 is NSManagedObjectID }) else { return snapshot }
+		var snapshotWithPermanentIDs: NSDiffableDataSourceSnapshot<String, NSObject> = .init()
+		snapshot.sectionIdentifiers.forEach { sectionIdentifier in
+			let itemsInSection = snapshot.itemIdentifiers(inSection: sectionIdentifier)
+			if itemsInSection.allSatisfy({ $0 is NSManagedObjectID }) {
+				do {
+					let objects = itemsInSection.compactMap { $0 as? NSManagedObjectID }.map { context.object(with: $0) }
+					try context.obtainPermanentIDs(for: objects)
+					snapshotWithPermanentIDs.appendSections([sectionIdentifier])
+					snapshotWithPermanentIDs.appendItems(objects, toSection: sectionIdentifier)
+				} catch {
+					snapshotWithPermanentIDs.appendSections([sectionIdentifier])
+				}
+			} else {
+				snapshotWithPermanentIDs.appendSections([sectionIdentifier])
+				snapshotWithPermanentIDs.appendItems(itemsInSection, toSection: sectionIdentifier)
 			}
 		}
 		return snapshotWithPermanentIDs

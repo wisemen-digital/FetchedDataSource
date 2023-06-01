@@ -10,11 +10,11 @@ import CoreData
 public struct FetchedDiffableItem: Hashable {
 	// MARK: - Properties
 
-	private let object: NSManagedObject?
+	private let object: NSObject?
 
 	// MARK: - Lifecycle
 
-	public init(item: NSManagedObject?) {
+	public init(item: NSObject?) {
 		object = item
 	}
 
