@@ -75,7 +75,7 @@ public final class FetchedCollectionDiffableDataSource: NSObject, NSFetchedResul
 		internalSnapshot.deleteSections(typedSnapshot.sectionIdentifiers.map { .init(identifier: $0) })
 		typedSnapshot.sectionIdentifiers.forEach { sectionIdentifier in
 			let section: FetchedDiffableSection = .init(identifier: sectionIdentifier)
-			let items: [FetchedDiffableItem] = typedSnapshot.itemIdentifiers(inSection: sectionIdentifier).map { .init(item: $0) }
+			let items: [FetchedDiffableItem] = typedSnapshot.itemIdentifiers(inSection: sectionIdentifier).map { .init(item: $0, sectionIdentifier: sectionIdentifier) }
 			if (isHidingEmptySections && !items.isEmpty) || !isHidingEmptySections {
 				internalSnapshot.appendSections([section])
 				internalSnapshot.appendItems(items, toSection: section)

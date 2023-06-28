@@ -5,20 +5,16 @@
 //  Created by Jonathan Provo on 14/03/2022.
 //
 
-import CoreData
+import Foundation
 
 public struct FetchedDiffableItem: Hashable {
-	// MARK: - Properties
+	public let sectionIdentifier: String
+	private let object: NSObject
 
-	private let object: NSObject?
-
-	// MARK: - Lifecycle
-
-	public init(item: NSObject?) {
-		object = item
+	public init(item object: NSObject, sectionIdentifier: String) {
+		self.object = object
+		self.sectionIdentifier = sectionIdentifier
 	}
-
-	// MARK: - Item
 
 	public func item<T>() -> T? {
 		object as? T
