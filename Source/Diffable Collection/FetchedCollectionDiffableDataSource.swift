@@ -68,11 +68,12 @@ public final class FetchedCollectionDiffableDataSource: NSObject, NSFetchedResul
 	}
 
 	// MARK: - NSFetchedResultsControllerDelegate
+
 	public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
 		var itemsBeforeChange = internalSnapshot.itemIdentifiers
-
 		let typedSnapshot = transform(snapshot: snapshot, context: controller.managedObjectContext)
-		internalSnapshot.deleteSections(typedSnapshot.sectionIdentifiers.map { .init(identifier: $0) })
+		internalSnapshot = .init()
+		
 		typedSnapshot.sectionIdentifiers.forEach { sectionIdentifier in
 			let section: FetchedDiffableSection = .init(identifier: sectionIdentifier)
 			let items: [FetchedDiffableItem] = typedSnapshot.itemIdentifiers(inSection: sectionIdentifier).map { .init(item: $0, sectionIdentifier: sectionIdentifier) }
