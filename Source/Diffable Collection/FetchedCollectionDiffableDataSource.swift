@@ -14,14 +14,14 @@ public typealias FetchedDiffableDataSource = UICollectionViewDiffableDataSource<
 @available(iOS 13.0, *)
 public final class FetchedCollectionDiffableDataSource: NSObject, NSFetchedResultsControllerDelegate {
 	// MARK: - Properties
-	/// A boolean indicating whether empty sections should be hidden or not. The default value is `false`.
-	public var isHidingEmptySections: Bool = false
+	/// A boolean indicating whether empty sections should be hidden or not. The default value is `true`.
+	public var isHidingEmptySections: Bool
 	/// A boolean indicating whether updated items should be reconfigured or reloaded. Setting this value to `true` will reconfigure items, setting this value to `false` will reload items. The default value is `true`.
 	public var isReconfiguringItems: Bool = true
 	/// A boolean indicating whether differences should be animated. The default value is `true`.
 	public var isAnimatingDifferences: Bool = true
 	/// A boolean indicating whether snapshot updates should be applied immediately. Changes occuring to the snapshot will remain pending until the next time this value is set to `true`. The default value is `true`.
-	public var isUpdatingAutomatically: Bool = true {
+	public var isUpdatingAutomatically: Bool {
 		didSet {
 			guard isUpdatingAutomatically else { return }
 			applyPendingSnapshot()
@@ -37,10 +37,11 @@ public final class FetchedCollectionDiffableDataSource: NSObject, NSFetchedResul
 	// MARK: - Lifecycle
 
 	/// Creates a diffable data source based on a `NSFetchedResultsController` instance.
-	public init(controller: NSFetchedResultsController<NSFetchRequestResult>, dataSource: FetchedDiffableDataSource, delegate: FetchedCollectionDiffableDataSourceDelegate, isUpdatingAutomatically: Bool = true) {
+	public init(controller: NSFetchedResultsController<NSFetchRequestResult>, dataSource: FetchedDiffableDataSource, delegate: FetchedCollectionDiffableDataSourceDelegate? = nil, isHidingEmptySections: Bool = true, isUpdatingAutomatically: Bool = true) {
 		self.controller = controller
 		self.dataSource = dataSource
 		self.delegate = delegate
+		self.isHidingEmptySections = isHidingEmptySections
 		self.isUpdatingAutomatically = isUpdatingAutomatically
 		super.init()
 		commonInit()
@@ -72,17 +73,7 @@ public final class FetchedCollectionDiffableDataSource: NSObject, NSFetchedResul
 	public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
 		var itemsBeforeChange = internalSnapshot.itemIdentifiers
 		let typedSnapshot = transform(snapshot: snapshot, context: controller.managedObjectContext)
-		internalSnapshot = .init()
-		
-		typedSnapshot.sectionIdentifiers.forEach { sectionIdentifier in
-			let section: FetchedDiffableSection = .init(identifier: sectionIdentifier)
-			let items: [FetchedDiffableItem] = typedSnapshot.itemIdentifiers(inSection: sectionIdentifier).map { .init(item: $0, sectionIdentifier: sectionIdentifier) }
-			if (isHidingEmptySections && !items.isEmpty) || !isHidingEmptySections {
-				internalSnapshot.appendSections([section])
-				internalSnapshot.appendItems(items, toSection: section)
-			}
-		}
-
+		updateInternalSnapshot(withChangedContent: typedSnapshot)
 		var externalSnapshot = internalSnapshot // modifiable snapshot to be displayed
 		delegate?.contentChangeWillBeApplied(snapshot: &externalSnapshot)
 
@@ -103,6 +94,36 @@ public final class FetchedCollectionDiffableDataSource: NSObject, NSFetchedResul
 
 	// MARK: - Helpers
 
+	/// Propagates changes from fetched results controllers into the internal snapshot.
+	private func updateInternalSnapshot(withChangedContent snapshot: NSDiffableDataSourceSnapshot<String, NSObject>) {
+		// delete all items in the change, as they will be inserted again anyway
+		// this will prevent the issue where the last item from a section is not being removed properly
+		internalSnapshot.deleteItems(internalSnapshot.sectionIdentifiers.flatMap { section in
+			snapshot.itemIdentifiers.flatMap { object in
+				.init(item: object, sectionIdentifier: section.identifier)
+			}
+		})
+
+		// delete any empty sections
+		if isHidingEmptySections {
+			internalSnapshot.deleteSections(internalSnapshot.sectionIdentifiers.filter { internalSnapshot.numberOfItems(inSection: $0) == 0 })
+		}
+
+		// delete all sections in the change, as they will be inserted again anyway
+		internalSnapshot.deleteSections(snapshot.sectionIdentifiers.map { .init(identifier: $0) })
+
+		// add all sections and items in the change
+		snapshot.sectionIdentifiers.forEach { sectionIdentifier in
+			let section: FetchedDiffableSection = .init(identifier: sectionIdentifier)
+			let items: [FetchedDiffableItem] = snapshot.itemIdentifiers(inSection: sectionIdentifier).map { .init(item: $0, sectionIdentifier: sectionIdentifier) }
+			if (isHidingEmptySections && !items.isEmpty) || !isHidingEmptySections {
+				internalSnapshot.appendSections([section])
+				internalSnapshot.appendItems(items, toSection: section)
+			}
+		}
+	}
+
+	/// Transforms the `NSDiffableDataSourceSnapshotReference` into a `NSDiffableDataSourceSnapshot` object.
 	private func transform(snapshot: NSDiffableDataSourceSnapshotReference, context: NSManagedObjectContext) -> NSDiffableDataSourceSnapshot<String, NSObject> {
 		obtainPermanentIDs(for: snapshot as NSDiffableDataSourceSnapshot<String, NSObject>, context: context)
 	}
