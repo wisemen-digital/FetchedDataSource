@@ -153,9 +153,11 @@ public final class FetchedCollectionDiffableDataSource: NSObject, NSFetchedResul
 	}
 
 	private func applySnapshot(snapshot: NSDiffableDataSourceSnapshot<FetchedDiffableSection, FetchedDiffableItem>) {
-		delegate?.willChangeContent()
-		dataSource.apply(snapshot, animatingDifferences: isAnimatingDifferences) { [weak self] in
-			self?.delegate?.didChangeContent()
+		DispatchQueue.main.async {
+			self.delegate?.willChangeContent()
+			self.dataSource.apply(snapshot, animatingDifferences: self.isAnimatingDifferences) { [weak self] in
+				self?.delegate?.didChangeContent()
+			}
 		}
 	}
 
