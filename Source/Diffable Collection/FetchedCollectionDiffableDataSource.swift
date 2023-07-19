@@ -96,20 +96,8 @@ public final class FetchedCollectionDiffableDataSource: NSObject, NSFetchedResul
 
 	/// Propagates changes from fetched results controllers into the internal snapshot.
 	private func updateInternalSnapshot(withChangedContent snapshot: NSDiffableDataSourceSnapshot<String, NSObject>) {
-		// delete all items in the change, as they will be inserted again anyway
-		// this will prevent the issue where the last item from a section is not being removed properly
-		internalSnapshot.deleteItems(internalSnapshot.sectionIdentifiers.flatMap { section in
-			snapshot.itemIdentifiers.flatMap { object in
-				.init(item: object, sectionIdentifier: section.identifier)
-			}
-		})
-
-		// delete any empty sections
-		if isHidingEmptySections {
-			internalSnapshot.deleteSections(internalSnapshot.sectionIdentifiers.filter { internalSnapshot.numberOfItems(inSection: $0) == 0 })
-		}
-
 		// delete all sections in the change, as they will be inserted again anyway
+		// this will prevent the issue where the last item from a section is not being removed properly
 		internalSnapshot.deleteSections(snapshot.sectionIdentifiers.map { .init(identifier: $0) })
 
 		// add all sections and items in the change
