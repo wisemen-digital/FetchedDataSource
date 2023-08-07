@@ -96,16 +96,28 @@ public final class FetchedCollectionDiffableDataSource: NSObject, NSFetchedResul
 
 	/// Propagates changes from fetched results controllers into the internal snapshot.
 	private func updateInternalSnapshot(withChangedContent snapshot: NSDiffableDataSourceSnapshot<String, NSObject>) {
-		// delete all sections in the change, as they will be inserted again anyway
-		// this will prevent the issue where the last item from a section is not being removed properly
-		internalSnapshot.deleteSections(snapshot.sectionIdentifiers.map { .init(identifier: $0) })
+		// maintain section order
+		let indices: [String: Int] = snapshot.sectionIdentifiers.reduce(into: [:]) { result, sectionIdentifier in
+			if let index = internalSnapshot.sectionIdentifiers.firstIndex(where: { $0.identifier == sectionIdentifier }) {
+				result[sectionIdentifier] = index
+			}
+		}
 
-		// add all sections and items in the change
+		// delete all sections, as they will be inserted again anyway
+		// this will prevent the issue where the last item from a section is not being removed properly
+		internalSnapshot.deleteSections(internalSnapshot.sectionIdentifiers)
+
+		// add all sections and items
 		snapshot.sectionIdentifiers.forEach { sectionIdentifier in
 			let section: FetchedDiffableSection = .init(identifier: sectionIdentifier)
 			let items: [FetchedDiffableItem] = snapshot.itemIdentifiers(inSection: sectionIdentifier).map { .init(item: $0, sectionIdentifier: sectionIdentifier) }
 			if (isHidingEmptySections && !items.isEmpty) || !isHidingEmptySections {
-				internalSnapshot.appendSections([section])
+				if let index = indices[sectionIdentifier], index < internalSnapshot.numberOfSections {
+					let sectionAtIndex = internalSnapshot.sectionIdentifiers[index]
+					internalSnapshot.insertSections([section], beforeSection: sectionAtIndex)
+				} else {
+					internalSnapshot.appendSections([section])
+				}
 				internalSnapshot.appendItems(items, toSection: section)
 			}
 		}
