@@ -8,6 +8,17 @@
 import CoreData
 import UIKit
 
+/**
+
+ Once automated testing rock has advanced far enough, add tests.
+ Edge cases:
+ - displaying the same item in multiple sections simultaneously should be supported
+ - displaying multiple sections using `sectionNameKeyPath` should use the correct order
+ - displaying multiple sections using `DiffableCompoundFetchedResultsController` should use the correct order
+ - removing the last item from a section should delete the entire section
+
+ */
+
 @available(iOS 13.0, *)
 public typealias FetchedDiffableDataSource = UICollectionViewDiffableDataSource<FetchedDiffableSection, FetchedDiffableItem>
 
@@ -95,7 +106,7 @@ public final class FetchedCollectionDiffableDataSource: NSObject, NSFetchedResul
 	// MARK: - Helpers
 
 	/// Propagates changes from fetched results controllers into the internal snapshot.
-	private func updateInternalSnapshot(withChangedContent snapshot: NSDiffableDataSourceSnapshot<String, NSObject>) {
+	private func updateInternalSnapshot(withChangedContent snapshot: NSDiffableDataSourceSnapshot<String, FetchedDiffableItem>) {
 		// maintain section order
 		let indices: [String: Int] = snapshot.sectionIdentifiers.reduce(into: [:]) { result, sectionIdentifier in
 			if let index = internalSnapshot.sectionIdentifiers.firstIndex(where: { $0.identifier == sectionIdentifier }) {
@@ -110,7 +121,7 @@ public final class FetchedCollectionDiffableDataSource: NSObject, NSFetchedResul
 		// add all sections and items
 		snapshot.sectionIdentifiers.forEach { sectionIdentifier in
 			let section: FetchedDiffableSection = .init(identifier: sectionIdentifier)
-			let items: [FetchedDiffableItem] = snapshot.itemIdentifiers(inSection: sectionIdentifier).map { .init(item: $0, sectionIdentifier: sectionIdentifier) }
+			let items: [FetchedDiffableItem] = snapshot.itemIdentifiers(inSection: sectionIdentifier)
 			if (isHidingEmptySections && !items.isEmpty) || !isHidingEmptySections {
 				if let index = indices[sectionIdentifier], index < internalSnapshot.numberOfSections {
 					let sectionAtIndex = internalSnapshot.sectionIdentifiers[index]
@@ -124,23 +135,24 @@ public final class FetchedCollectionDiffableDataSource: NSObject, NSFetchedResul
 	}
 
 	/// Transforms the `NSDiffableDataSourceSnapshotReference` into a `NSDiffableDataSourceSnapshot` object.
-	private func transform(snapshot: NSDiffableDataSourceSnapshotReference, context: NSManagedObjectContext) -> NSDiffableDataSourceSnapshot<String, NSObject> {
-		obtainPermanentIDs(for: snapshot as NSDiffableDataSourceSnapshot<String, NSObject>, context: context)
+	private func transform(snapshot: NSDiffableDataSourceSnapshotReference, context: NSManagedObjectContext) -> NSDiffableDataSourceSnapshot<String, FetchedDiffableItem> {
+		obtainPermanentIDs(for: snapshot.transform(), context: context)
 	}
 
 	/// The napshot returned by the `NSFetchedResultsController` instance contains temporary `NSManagedObjectID`s.
 	/// Working with temporary identifiers can lead to issues since at some point in time they will no longer exist.
-	private func obtainPermanentIDs(for snapshot: NSDiffableDataSourceSnapshot<String, NSObject>, context: NSManagedObjectContext) -> NSDiffableDataSourceSnapshot<String, NSObject> {
-		guard snapshot.itemIdentifiers.contains(where: { $0 is NSManagedObjectID }) else { return snapshot }
-		var snapshotWithPermanentIDs: NSDiffableDataSourceSnapshot<String, NSObject> = .init()
+	private func obtainPermanentIDs(for snapshot: NSDiffableDataSourceSnapshot<String, FetchedDiffableItem>, context: NSManagedObjectContext) -> NSDiffableDataSourceSnapshot<String, FetchedDiffableItem> {
+		guard snapshot.itemIdentifiers.contains(where: { $0.object is NSManagedObjectID }) else { return snapshot }
+		var snapshotWithPermanentIDs: NSDiffableDataSourceSnapshot<String, FetchedDiffableItem> = .init()
 		snapshot.sectionIdentifiers.forEach { sectionIdentifier in
 			let itemsInSection = snapshot.itemIdentifiers(inSection: sectionIdentifier)
-			if itemsInSection.allSatisfy({ $0 is NSManagedObjectID }) {
+			if itemsInSection.allSatisfy({ $0.object is NSManagedObjectID }) {
 				do {
-					let objects = itemsInSection.compactMap { $0 as? NSManagedObjectID }.map { context.object(with: $0) }
+					let objectIDs: [NSManagedObjectID] = itemsInSection.compactMap { $0.item() }
+					let objects: [NSManagedObject] = objectIDs.map { context.object(with: $0) }
 					try context.obtainPermanentIDs(for: objects)
 					snapshotWithPermanentIDs.appendSections([sectionIdentifier])
-					snapshotWithPermanentIDs.appendItems(objects, toSection: sectionIdentifier)
+					snapshotWithPermanentIDs.appendItems(objects.map { .init(item: $0, sectionIdentifier: sectionIdentifier) }, toSection: sectionIdentifier)
 				} catch {
 					snapshotWithPermanentIDs.appendSections([sectionIdentifier])
 				}
@@ -165,5 +177,26 @@ public final class FetchedCollectionDiffableDataSource: NSObject, NSFetchedResul
 		guard let pendingSnapshot else { return }
 		defer { self.pendingSnapshot = nil }
 		applySnapshot(snapshot: pendingSnapshot)
+	}
+}
+
+@available(iOS 13.0, *)
+private extension NSDiffableDataSourceSnapshotReference {
+	func transform() -> NSDiffableDataSourceSnapshot<String, FetchedDiffableItem> {
+		if itemIdentifiers.allSatisfy({ $0 is FetchedDiffableItem }) {
+			return self as NSDiffableDataSourceSnapshot<String, FetchedDiffableItem>
+		} else {
+			return doTransform()
+		}
+	}
+
+	private func doTransform() -> NSDiffableDataSourceSnapshot<String, FetchedDiffableItem> {
+		var typedSnapshot = self as NSDiffableDataSourceSnapshot<String, NSObject>
+		var transformedSnapshot: NSDiffableDataSourceSnapshot<String, FetchedDiffableItem> = .init()
+		typedSnapshot.sectionIdentifiers.forEach { sectionIdentifier in
+			transformedSnapshot.appendSections([sectionIdentifier])
+			transformedSnapshot.appendItems(typedSnapshot.itemIdentifiers(inSection: sectionIdentifier).map { .init(item: $0, sectionIdentifier: sectionIdentifier) }, toSection: sectionIdentifier)
+		}
+		return transformedSnapshot
 	}
 }

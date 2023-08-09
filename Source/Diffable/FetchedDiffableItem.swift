@@ -9,7 +9,7 @@ import Foundation
 
 public struct FetchedDiffableItem: Hashable {
 	public let sectionIdentifier: String
-	private let object: NSObject
+	let object: NSObject
 
 	public init(item object: NSObject, sectionIdentifier: String) {
 		self.object = object

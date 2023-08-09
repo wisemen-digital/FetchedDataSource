@@ -22,4 +22,12 @@ Pod::Spec.new do |s|
 	s.pod_target_xcconfig = {
 		"DEFINES_MODULE" => "YES"
 	}
+
+	# subspecs
+	s.default_subspec = 'Diffable'
+
+	# subspec: diffable
+	s.subspec 'Diffable' do |ss|
+		ss.source_files = 'Source/Diffable/**/*.swift'
+	end
 end
