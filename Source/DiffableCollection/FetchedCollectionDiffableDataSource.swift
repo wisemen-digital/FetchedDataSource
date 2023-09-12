@@ -84,7 +84,7 @@ public final class FetchedCollectionDiffableDataSource: NSObject, NSFetchedResul
 	public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
 		var itemsBeforeChange = internalSnapshot.itemIdentifiers
 		let typedSnapshot = transform(snapshot: snapshot, context: controller.managedObjectContext)
-		updateInternalSnapshot(withChangedContent: typedSnapshot)
+		updateInternalSnapshot(withChangedContent: typedSnapshot, maintainSectionOrder: !(controller.sectionNameKeyPath?.isEmpty ?? true)) // maintain section order for FRC's with `sectionNameKeyPath` set
 		var externalSnapshot = internalSnapshot // modifiable snapshot to be displayed
 		delegate?.contentChangeWillBeApplied(snapshot: &externalSnapshot)
 
@@ -106,12 +106,16 @@ public final class FetchedCollectionDiffableDataSource: NSObject, NSFetchedResul
 	// MARK: - Helpers
 
 	/// Propagates changes from fetched results controllers into the internal snapshot.
-	private func updateInternalSnapshot(withChangedContent snapshot: NSDiffableDataSourceSnapshot<String, FetchedDiffableItem>) {
-		// maintain section order
-		let indices: [String: Int] = snapshot.sectionIdentifiers.reduce(into: [:]) { result, sectionIdentifier in
-			if let index = internalSnapshot.sectionIdentifiers.firstIndex(where: { $0.identifier == sectionIdentifier }) {
-				result[sectionIdentifier] = index
+	private func updateInternalSnapshot(withChangedContent snapshot: NSDiffableDataSourceSnapshot<String, FetchedDiffableItem>, maintainSectionOrder: Bool) {
+		let indices: [String: Int]
+		if maintainSectionOrder { // maintain section order according to `internalSnapshot`
+			indices = snapshot.sectionIdentifiers.reduce(into: [:]) { result, sectionIdentifier in
+				if let index = internalSnapshot.sectionIdentifiers.firstIndex(where: { $0.identifier == sectionIdentifier }) {
+					result[sectionIdentifier] = index
+				}
 			}
+		} else { // maintain section order according to `snapshot`
+			indices = [:]
 		}
 
 		// delete all sections, as they will be inserted again anyway
